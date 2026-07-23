@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
-import { X, Trash2, CheckCheck } from "lucide-react";
+import { X, Trash, CheckCheck } from "@school-portal/ui";
 import Link from "next/link";
 
 interface Notification {
@@ -69,7 +69,7 @@ export function NotificationsClient({ notifications: initial }: { notifications:
           )}
           {notifications.length > 0 && (
             <Button variant="outline" onClick={clearAll}>
-              <Trash2 className="mr-1 h-3 w-3" />
+              <Trash size={12} className="mr-1" />
               Clear all
             </Button>
           )}

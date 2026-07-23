@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, Button } from "@school-portal/ui";
-import { UserPlus, GraduationCap, Palette, Pencil } from "lucide-react";
+import { UserPlus, GraduationCap, Palette, Pencil } from "@school-portal/ui";
 import { TeacherForm } from "@/components/teacher-form";
 
 interface Teacher {

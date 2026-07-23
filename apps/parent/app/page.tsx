@@ -1,7 +1,7 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle, ColorBlock } from "@school-portal/ui";
-import { Bell, ChevronRight } from "lucide-react";
+import { Bell, ChevronRight } from "@school-portal/ui";
 import { formatDate, daysUntil } from "@school-portal/shared";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
 import Link from "next/link";

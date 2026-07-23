@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="bg-white pb-20">
         <AuthProvider>
-          <main>{children}</main>
+          <main className="mx-auto max-w-lg">{children}</main>
           <BottomNav />
         </AuthProvider>
       </body>

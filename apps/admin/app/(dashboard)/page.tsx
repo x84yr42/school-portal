@@ -12,7 +12,7 @@ import {
   FileText,
   Download,
   GraduationCap,
-} from "lucide-react";
+} from "@school-portal/ui";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
                   <p className="text-card-title tabular-nums">{card.value}</p>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
-                  <Icon className="h-5 w-5" strokeWidth={1.5} />
+                  <Icon size={20} />
                 </div>
               </div>
             </ColorBlock>
@@ -112,17 +112,17 @@ export default async function DashboardPage() {
           <CardContent className="p-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-[24px] bg-[#c8e6cd] p-6 text-center">
-                <CheckCircle className="mx-auto h-6 w-6 text-[#1ea64a]" strokeWidth={1.5} />
+                <CheckCircle size={24} className="text-[#1ea64a]" />
                 <p className="mt-3 text-card-title tabular-nums">{stats.approved}</p>
                 <p className="text-body-sm">Approved</p>
               </div>
               <div className="rounded-[24px] bg-[#efd4d4] p-6 text-center">
-                <XCircle className="mx-auto h-6 w-6" strokeWidth={1.5} />
+                <XCircle size={24} className="mx-auto" />
                 <p className="mt-3 text-card-title tabular-nums">{stats.declined}</p>
                 <p className="text-body-sm">Declined</p>
               </div>
               <div className="rounded-[24px] bg-[#f7f7f5] p-6 text-center">
-                <Clock className="mx-auto h-6 w-6" strokeWidth={1.5} />
+                <Clock size={24} className="mx-auto" />
                 <p className="mt-3 text-card-title tabular-nums">
                   {stats.totalStudentsCount - stats.totalResponses}
                 </p>
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
               <Link key={action.href} href={action.href}>
                 <div className="flex flex-col items-center gap-3 rounded-[24px] border border-[#e6e6e6] bg-white p-6 transition-colors hover:bg-[#f7f7f5]">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black">
-                    <Icon className="h-5 w-5 text-white" strokeWidth={1.5} />
+                    <Icon size={20} className="text-white" />
                   </div>
                   <span className="text-body-sm font-[480]">{action.label}</span>
                 </div>

@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, Button } from "@school-portal/ui";
-import { Download, Upload, FileText, ArrowLeft } from "lucide-react";
+import { Download, Upload, FileText, ArrowLeft } from "@school-portal/ui";
 import Link from "next/link";
 
 interface ImportedStudent {

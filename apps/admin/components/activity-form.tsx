@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label, Textarea } from "@school-portal/ui";
-import { Plus, X, Image as ImageIcon } from "lucide-react";
+import { Plus, X, Image } from "@school-portal/ui";
 
 interface Activity {
   id: string;
@@ -257,7 +257,7 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
             className="hidden"
           />
           <Button type="button" variant="outline" onClick={() => fileInputRef.current?.click()}>
-            <ImageIcon className="mr-2 h-4 w-4" />
+            <Image size={16} className="mr-2" />
             Upload Photos
           </Button>
           {images.length > 0 && (

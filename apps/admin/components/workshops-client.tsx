@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@school-portal/ui";
-import { Users, Pencil, Plus, Calendar } from "lucide-react";
+import { Users, Pencil, Plus, Calendar } from "@school-portal/ui";
 import { WorkshopForm } from "@/components/workshop-form";
 import { WorkshopEnrollmentForm } from "@/components/workshop-enrollment-form";
 

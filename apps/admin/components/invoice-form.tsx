@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label } from "@school-portal/ui";
-import { Search, Plus, X } from "lucide-react";
+import { Search, Plus, X } from "@school-portal/ui";
 import { InvoiceCategoryManager } from "@/components/invoice-category-manager";
 
 interface InvoiceFormProps {

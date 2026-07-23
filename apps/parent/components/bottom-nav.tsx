@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Megaphone, CalendarCheck, CreditCard, Clock, Settings } from "lucide-react";
+import { Home, Megaphone, CalendarCheck, CreditCard, Clock, Settings } from "@school-portal/ui";
 import { cn } from "@school-portal/ui";
 
 const navItems = [
@@ -28,13 +28,12 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center gap-1 p-2",
+                "flex items-center p-2",
                 isActive ? "text-black" : "text-black/30"
               )}
             >
-              <Icon className="h-5 w-5" strokeWidth={1.5} />
-              <span className="text-caption">{item.label}</span>
-              {isActive && <span className="h-1 w-1 rounded-full bg-black" />}
+              <Icon size={24} />
+              {isActive && <span className="ml-1 h-1.5 w-1.5 rounded-full bg-black" />}
             </Link>
           );
         })}

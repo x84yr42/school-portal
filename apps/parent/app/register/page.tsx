@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Input, Label } from "@school-portal/ui";
-import { Plus, X } from "lucide-react";
+import { Plus, X } from "@school-portal/ui";
 
 export default function RegisterPage() {
   const router = useRouter();

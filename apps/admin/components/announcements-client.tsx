@@ -6,8 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@school
 import { formatDate } from "@school-portal/shared";
 import { AnnouncementForm } from "@/components/announcement-form";
 import {
-  Pencil, Trash2, CheckCircle, XCircle, Eye, BarChart3, Users,
-} from "lucide-react";
+  Pencil, Trash2, CheckCircle, XCircle, Eye, BarChart, Users,
+} from "@school-portal/ui";
 
 interface Metrics {
   totalParents: number;
@@ -102,7 +102,7 @@ export function AnnouncementsClient({ announcements: initial, classes, workshops
                       className="rounded-[8px] p-1 text-black/30 hover:bg-[#f7f7f5] hover:text-black/60 transition-colors"
                       title="View metrics"
                     >
-                      <BarChart3 className="h-4 w-4" />
+                      <BarChart size={16} />
                     </button>
                     <button
                       onClick={() => handleDelete(announcement.id)}
@@ -133,7 +133,7 @@ export function AnnouncementsClient({ announcements: initial, classes, workshops
                 {isExpanded && (
                   <div className="mt-4 space-y-3 rounded-[24px] border border-[#e6e6e6] bg-[#f7f7f5] p-4">
                     <h4 className="text-body-sm font-[480] text-black flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4" />
+                      <BarChart size={16} />
                       Engagement Metrics
                     </h4>
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">

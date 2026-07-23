@@ -1,7 +1,7 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
-import { Archive } from "lucide-react";
+import { Archive } from "@school-portal/ui";
 import Link from "next/link";
 import { Eyebrow } from "@school-portal/ui";
 import { AnnouncementsClient } from "./announcements-client";
@@ -69,7 +69,7 @@ export default async function AnnouncementsPage() {
     <div className="space-y-6 pb-24">
       {/* Lilac header strip */}
       <div className="rounded-b-[24px] bg-[#c5b0f4] px-4 py-8">
-        <div className="mx-auto max-w-lg">
+        <div>
           <Eyebrow>NEWS</Eyebrow>
           <div className="mt-2 flex items-center justify-between">
             <h2 className="text-display-lg text-black leading-none">Announcements</h2>
@@ -78,7 +78,7 @@ export default async function AnnouncementsPage() {
                 href="/announcements/archived"
                 className="flex items-center gap-2 text-body-sm font-[480]"
               >
-                <Archive className="h-4 w-4" strokeWidth={1.5} />
+                <Archive size={16} />
                 Archived ({archivedCount})
               </Link>
             )}

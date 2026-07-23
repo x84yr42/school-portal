@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
-import { Archive } from "lucide-react";
+import { Archive } from "@school-portal/ui";
 import Link from "next/link";
 import { AnnouncementsClient } from "../announcements-client";
 

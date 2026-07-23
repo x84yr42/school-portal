@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button, Input, Label } from "@school-portal/ui";
-import { Plus, Pencil, X, Check, FolderOpen } from "lucide-react";
+import { Plus, Pencil, X, Check, FolderOpen } from "@school-portal/ui";
 
 interface Category {
   id: string;

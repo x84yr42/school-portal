@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Eyebrow } from "@school-portal/ui";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export default async function NotificationsPage() {
           <h2 className="text-display-lg text-black">Notifications</h2>
         </div>
         <Button variant="magenta">
-          <AlertTriangle className="h-5 w-5" strokeWidth={1.5} />
+          <AlertTriangle size={20} />
           Emergency Broadcast
         </Button>
       </div>

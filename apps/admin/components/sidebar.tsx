@@ -15,7 +15,7 @@ import {
   GraduationCap,
   Palette,
   BookOpen,
-} from "lucide-react";
+} from "@school-portal/ui";
 import { signOut } from "next-auth/react";
 import { cn } from "@school-portal/ui";
 
@@ -63,7 +63,7 @@ export function Sidebar() {
                     : "text-black font-[330] hover:bg-[#f7f7f5]"
                 )}
               >
-                <Icon className="h-5 w-5" strokeWidth={1.5} />
+                <Icon size={20} />
                 {item.label}
               </Link>
             );
@@ -76,7 +76,7 @@ export function Sidebar() {
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="flex w-full items-center gap-3 rounded-[50px] px-4 py-2.5 text-body-sm font-[330] text-black hover:bg-[#f7f7f5] transition-colors"
           >
-            <LogOut className="h-5 w-5" strokeWidth={1.5} />
+            <LogOut size={20} />
             Sign out
           </button>
         </div>

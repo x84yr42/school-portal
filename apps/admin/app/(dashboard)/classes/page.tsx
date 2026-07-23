@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Eyebrow } from "@school-portal/ui";
-import { Users } from "lucide-react";
+import { Users } from "@school-portal/ui";
 import { ClassForm } from "@/components/class-form";
 
 export const dynamic = "force-dynamic";

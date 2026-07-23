@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@school-portal/ui";
-import { CalendarCheck, Plus, Pencil, BarChart3, CheckCircle, XCircle, Clock } from "lucide-react";
+import { CalendarCheck, Plus, Pencil, BarChart, CheckCircle, XCircle, Clock } from "@school-portal/ui";
 import { ActivityForm } from "@/components/activity-form";
 
 interface ActivityResponse {
@@ -92,7 +92,7 @@ export function ActivitiesClient({ activities: initialActivities, totalStudents 
                 {/* Metrics */}
                 <div className="mt-4 flex flex-wrap items-center gap-4 text-body-sm">
                   <div className="flex items-center gap-1 text-black/50">
-                    <BarChart3 className="h-4 w-4" />
+                    <BarChart size={16} />
                     <span className="tabular-nums">{total} response(s) ({totalStudents > 0 ? Math.round((total / totalStudents) * 100) : 0}%)</span>
                   </div>
                   <div className="flex items-center gap-1 text-[#1ea64a]">

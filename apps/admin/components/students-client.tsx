@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, Button, Input } from "@school-portal/ui";
-import { UserPlus, Search, Download, Filter, ArrowUpDown } from "lucide-react";
+import { UserPlus, Search, Download, Filter, ArrowUpDown } from "@school-portal/ui";
 import { StudentForm } from "@/components/student-form";
 
 interface Student {

@@ -2,7 +2,7 @@ import { prisma } from "@school-portal/database";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Eyebrow } from "@school-portal/ui";
 import { formatDate, formatCurrency, daysUntil } from "@school-portal/shared";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight } from "@school-portal/ui";
 
 export const dynamic = "force-dynamic";
 

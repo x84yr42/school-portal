@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { Card, CardContent, Badge } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@school-portal/ui";
 import { AcknowledgeButton } from "./acknowledge-button";
 
 export const dynamic = "force-dynamic";
@@ -46,7 +46,7 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
   return (
     <div className="space-y-4 p-4 pb-24">
       <Link href="/announcements" className="inline-flex items-center text-body-sm text-black/60">
-        <ArrowLeft className="mr-1 h-4 w-4" />
+        <ArrowLeft size={16} className="mr-1" />
         Back to announcements
       </Link>
 

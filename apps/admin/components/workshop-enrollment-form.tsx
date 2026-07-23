@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label } from "@school-portal/ui";
-import { Search, UserPlus, X, Users } from "lucide-react";
+import { Search, UserPlus, X, Users } from "@school-portal/ui";
 
 interface WorkshopEnrollmentFormProps {
   workshops: { id: string; name: string }[];

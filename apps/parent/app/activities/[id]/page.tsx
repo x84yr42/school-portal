@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { Card, CardContent, Badge, Button } from "@school-portal/ui";
 import { formatDate, formatCurrency, daysUntil } from "@school-portal/shared";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@school-portal/ui";
 
 export const dynamic = "force-dynamic";
 

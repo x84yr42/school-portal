@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@school-portal/ui";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle } from "@school-portal/ui";
 
 export function AcknowledgeButton({
   announcementId,

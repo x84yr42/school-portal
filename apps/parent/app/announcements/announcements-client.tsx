@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
-import { CheckCircle, Archive, ArchiveRestore } from "lucide-react";
+import { CheckCircle, Archive, ArchiveRestore } from "@school-portal/ui";
 import Link from "next/link";
 
 interface Announcement {

@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
 import { formatDate, formatCurrency } from "@school-portal/shared";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "@school-portal/ui";
 
 export const dynamic = "force-dynamic";
 

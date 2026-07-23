@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { Card, CardContent, CardHeader, CardTitle, Badge, ColorBlock, Eyebrow } from "@school-portal/ui";
-import { Users, Baby } from "lucide-react";
+import { Users, Baby } from "@school-portal/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -36,7 +36,7 @@ export default async function ParentsPage() {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <ColorBlock color="lime" className="flex items-center gap-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
-            <Users className="h-5 w-5" strokeWidth={1.5} />
+            <Users size={20} />
           </div>
           <div>
             <p className="text-caption">TOTAL PARENTS</p>
@@ -45,7 +45,7 @@ export default async function ParentsPage() {
         </ColorBlock>
         <ColorBlock color="mint" className="flex items-center gap-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
-            <Baby className="h-5 w-5" strokeWidth={1.5} />
+            <Baby size={20} />
           </div>
           <div>
             <p className="text-caption">CHILDREN LINKED</p>
@@ -54,7 +54,7 @@ export default async function ParentsPage() {
         </ColorBlock>
         <ColorBlock color="lilac" className="flex items-center gap-4">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
-            <Users className="h-5 w-5" strokeWidth={1.5} />
+            <Users size={20} />
           </div>
           <div>
             <p className="text-caption">MULTI-CHILD</p>

@@ -2,7 +2,7 @@
 
 import { signOut } from "next-auth/react";
 import { Card, CardContent, Button, Eyebrow } from "@school-portal/ui";
-import { LogOut, Bell, Shield, User, ChevronRight } from "lucide-react";
+import { LogOut, Bell, Shield, User, ChevronRight } from "@school-portal/ui";
 
 export default function SettingsPage() {
   return (
