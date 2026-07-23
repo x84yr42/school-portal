@@ -67,8 +67,8 @@ export default async function AnnouncementsPage() {
 
   return (
     <div className="space-y-6 pb-24">
-      {/* Lilac header strip */}
-      <div className="rounded-b-[24px] bg-[#c5b0f4] px-4 py-8">
+      {/* Header strip */}
+      <div className="rounded-b-[24px] bg-block-lilac px-4 py-8">
         <div>
           <Eyebrow>NEWS</Eyebrow>
           <div className="mt-2 flex items-center justify-between">

@@ -2,8 +2,9 @@ import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
 import { Card, CardContent, CardHeader, CardTitle, ColorBlock, Stagger, StaggerItem } from "@school-portal/ui";
 import { Bell, ChevronRight } from "@school-portal/ui";
-import { formatDate, daysUntil } from "@school-portal/shared";
+import { daysUntil } from "@school-portal/shared";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
+import { HomeAnnouncements } from "@/components/home-announcements";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -41,8 +42,14 @@ export default async function HomePage() {
   const [allAnnouncements, activities, invoices, unreadCount] = await Promise.all([
     prisma.announcement.findMany({
       where: { isPublished: true },
+      include: {
+        reads: {
+          where: { userId: user?.id },
+          select: { acknowledgedAt: true, archivedAt: true },
+        },
+      },
       orderBy: { publishedAt: "desc" },
-      take: 10,
+      take: 20,
     }),
     prisma.activity.findMany({
       where: { status: "ACTIVE" },
@@ -84,7 +91,19 @@ export default async function HomePage() {
     })
   );
 
-  const announcements = allAnnouncements.filter((a) => isAnnouncementVisible(a.targetAudience, context)).slice(0, 3);
+  // Hide acknowledged and archived announcements from the home feed so newer ones have room.
+  const announcements = allAnnouncements
+    .filter((a) => {
+      const read = a.reads[0];
+      return !read?.acknowledgedAt && !read?.archivedAt;
+    })
+    .filter((a) => isAnnouncementVisible(a.targetAudience, context));
+
+  const previewAnnouncements = announcements.slice(0, 3).map((a) => ({
+    id: a.id,
+    title: a.title,
+    createdAt: a.createdAt.toISOString(),
+  }));
 
   return (
     <div className="space-y-8 p-4">
@@ -130,25 +149,7 @@ export default async function HomePage() {
             See all
           </Link>
         </div>
-        {announcements.length === 0 ? (
-          <p className="text-body-sm">No announcements yet.</p>
-        ) : (
-          <div className="space-y-2">
-            {announcements.map((announcement) => (
-              <Link
-                key={announcement.id}
-                href={`/announcements/${announcement.id}`}
-                className="flex items-center justify-between gap-3 rounded-[24px] border border-[#e6e6e6] bg-white p-4 hover:bg-[#f7f7f5] transition-colors"
-              >
-                <div className="min-w-0">
-                  <p className="text-body-sm font-[480] truncate">{announcement.title}</p>
-                  <p className="text-caption mt-1">{formatDate(announcement.createdAt)}</p>
-                </div>
-                <ChevronRight className="h-4 w-4 shrink-0" strokeWidth={1.5} />
-              </Link>
-            ))}
-          </div>
-        )}
+        <HomeAnnouncements announcements={previewAnnouncements} />
       </div>
 
       {/* Pending Activities */}

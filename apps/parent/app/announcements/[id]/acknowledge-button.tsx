@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@school-portal/ui";
+import { useRouter } from "next/navigation";
+import { Button, toast } from "@school-portal/ui";
 import { CheckCircle } from "@school-portal/ui";
 
 export function AcknowledgeButton({
@@ -11,6 +12,7 @@ export function AcknowledgeButton({
   announcementId: string;
   hasAcknowledged: boolean;
 }) {
+  const router = useRouter();
   const [acknowledged, setAcknowledged] = useState(hasAcknowledged);
   const [loading, setLoading] = useState(false);
 
@@ -23,8 +25,10 @@ export function AcknowledgeButton({
     });
     if (res.ok) {
       setAcknowledged(true);
+      toast.success("Announcement acknowledged");
+      router.refresh();
     } else {
-      // silently fail – user can retry
+      toast.error("Something went wrong. Please try again.");
     }
     setLoading(false);
   }

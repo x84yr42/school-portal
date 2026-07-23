@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, useReducedMotion } from "motion/react";
 import { Home, Megaphone, CalendarCheck, CreditCard, Clock, Settings } from "@school-portal/ui";
 import { cn } from "@school-portal/ui";
 
@@ -17,7 +16,6 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
-  const reduce = useReducedMotion();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#e6e6e6] bg-white pb-safe">
@@ -30,22 +28,13 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "flex items-center gap-1 p-2 transition-colors",
-                isActive ? "text-black" : "text-black/30"
+                "flex items-center justify-center p-2 transition-colors duration-200",
+                isActive ? "text-black" : "text-black/35 hover:text-black/60"
               )}
             >
               <Icon size={24} />
-              {isActive &&
-                (reduce ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-black" />
-                ) : (
-                  <motion.span
-                    layoutId="nav-active-dot"
-                    className="h-1.5 w-1.5 rounded-full bg-black"
-                    transition={{ type: "spring", stiffness: 500, damping: 34 }}
-                  />
-                ))}
             </Link>
           );
         })}

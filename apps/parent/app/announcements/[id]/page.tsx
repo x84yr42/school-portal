@@ -63,14 +63,12 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
           </p>
           <p className="whitespace-pre-wrap text-black/70">{announcement.body}</p>
 
-          {announcement.requiresAck && (
-            <div className="mt-6">
-              <AcknowledgeButton
-                announcementId={id}
-                hasAcknowledged={hasAcknowledged}
-              />
-            </div>
-          )}
+          <div className="mt-6">
+            <AcknowledgeButton
+              announcementId={id}
+              hasAcknowledged={hasAcknowledged}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -3,7 +3,7 @@ import { cn } from "../lib/utils";
 
 const colorMap: Record<string, { bg: string; text: string }> = {
   lime: { bg: "bg-[#dceeb1]", text: "text-black" },
-  lilac: { bg: "bg-[#c5b0f4]", text: "text-black" },
+  lilac: { bg: "bg-[#a78bfa]", text: "text-black" },
   cream: { bg: "bg-[#f4ecd6]", text: "text-black" },
   mint: { bg: "bg-[#c8e6cd]", text: "text-black" },
   pink: { bg: "bg-[#efd4d4]", text: "text-black" },

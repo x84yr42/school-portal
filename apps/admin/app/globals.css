@@ -15,7 +15,7 @@
 
   /* Pastel color-block surfaces */
   --block-lime: #dceeb1;
-  --block-lilac: #c5b0f4;
+  --block-lilac: #a78bfa;
   --block-cream: #f4ecd6;
   --block-mint: #c8e6cd;
   --block-pink: #efd4d4;
@@ -57,6 +57,12 @@
 }
 
 /* ── Base Reset ── */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   background: var(--canvas);
   color: var(--ink);

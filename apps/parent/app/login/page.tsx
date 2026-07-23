@@ -40,7 +40,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="rounded-[24px] border border-[#e6e6e6] bg-white overflow-hidden">
           {/* Color block accent */}
-          <div className="h-2 bg-[#c5b0f4]" />
+          <div className="h-2 bg-block-lilac" />
           <div className="p-8">
             <div className="mb-8 text-center">
               <h1 className="text-display-lg text-black leading-none">Little Scholars</h1>
