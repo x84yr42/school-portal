@@ -36,11 +36,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-blue-50 px-4">
-      <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-blue-600">Little Scholars</h1>
-          <p className="mt-1 text-gray-600">Parent Portal</p>
+    <div className="flex min-h-screen items-center justify-center bg-white px-4">
+      <div className="w-full max-w-sm rounded-[24px] border border-[#e6e6e6] bg-white p-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-display-lg text-black leading-none">Little Scholars</h1>
+          <p className="text-body-sm mt-2">Parent Portal</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -67,16 +67,16 @@ export default function LoginPage() {
             />
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-body-sm text-[#ff3d8b]">{error}</p>}
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Signing in..." : "Sign in"}
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-body-sm">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-blue-600 hover:underline">
+          <Link href="/register" className="font-[480] underline underline-offset-4">
             Create one
           </Link>
         </p>

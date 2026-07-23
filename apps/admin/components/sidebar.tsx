@@ -38,11 +38,14 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-gray-200 bg-white">
+    <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-[#e6e6e6] bg-white">
       <div className="flex h-full flex-col">
-        <div className="flex h-16 items-center border-b border-gray-200 px-6">
-          <span className="text-lg font-bold text-blue-600">Little Scholars</span>
+        {/* Logo */}
+        <div className="flex h-14 items-center border-b border-[#e6e6e6] px-6">
+          <span className="text-display-lg text-black leading-none">Little Scholars</span>
         </div>
+
+        {/* Navigation */}
         <nav className="flex-1 space-y-1 p-4">
           {navItems.map((item) => {
             const Icon = item.icon;
@@ -54,24 +57,26 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-3 rounded-[50px] px-4 py-2.5 text-body-sm transition-colors",
                   isActive
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    ? "bg-black text-white font-[480]"
+                    : "text-black font-[330] hover:bg-[#f7f7f5]"
                 )}
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-5 w-5" strokeWidth={1.5} />
                 {item.label}
               </Link>
             );
           })}
         </nav>
-        <div className="border-t border-gray-200 p-4">
+
+        {/* Sign out */}
+        <div className="border-t border-[#e6e6e6] p-4">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+            className="flex w-full items-center gap-3 rounded-[50px] px-4 py-2.5 text-body-sm font-[330] text-black hover:bg-[#f7f7f5] transition-colors"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-5 w-5" strokeWidth={1.5} />
             Sign out
           </button>
         </div>

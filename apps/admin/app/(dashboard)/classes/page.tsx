@@ -1,5 +1,5 @@
 import { prisma } from "@school-portal/database";
-import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge, Eyebrow } from "@school-portal/ui";
 import { Users } from "lucide-react";
 import { ClassForm } from "@/components/class-form";
 
@@ -21,28 +21,31 @@ export default async function ClassesPage() {
   });
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Classes & Grades</h2>
+    <div className="space-y-12">
+      <div>
+        <Eyebrow className="mb-2 block">ACADEMICS</Eyebrow>
+        <h2 className="text-display-lg text-black">Classes & Grades</h2>
+      </div>
 
       <ClassForm teachers={teachers.map((t) => ({ id: t.id, name: t.name }))} />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {classes.map((cls) => (
           <Card key={cls.id}>
             <CardHeader>
               <div className="flex items-start justify-between">
-                <CardTitle className="text-lg">{cls.name}</CardTitle>
+                <CardTitle>{cls.name}</CardTitle>
                 <Badge>Grade {cls.grade}</Badge>
               </div>
-              <p className="text-sm text-gray-500">Adviser: {cls.teacher?.name || "—"}</p>
+              <p className="text-body-sm">Adviser: {cls.teacher?.name || "—"}</p>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-4 text-sm text-gray-600">
-                <span className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
+              <div className="flex items-center gap-4 text-body-sm">
+                <span className="flex items-center gap-2">
+                  <Users className="h-4 w-4" strokeWidth={1.5} />
                   {cls.enrollments.length} students
                 </span>
-                <span>{cls.scheduleSlots.length} schedule slots</span>
+                <span>{cls.scheduleSlots.length} slots</span>
               </div>
             </CardContent>
           </Card>

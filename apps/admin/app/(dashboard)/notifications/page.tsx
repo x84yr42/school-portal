@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@school-portal/ui";
-import { Bell, AlertTriangle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, Button, Badge, Eyebrow } from "@school-portal/ui";
+import { AlertTriangle } from "lucide-react";
 import { formatDate } from "@school-portal/shared";
 
 export const dynamic = "force-dynamic";
@@ -13,11 +13,14 @@ export default async function NotificationsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-12">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Notifications</h2>
-        <Button variant="destructive">
-          <AlertTriangle className="mr-2 h-4 w-4" />
+        <div>
+          <Eyebrow className="mb-2 block">COMMUNICATIONS</Eyebrow>
+          <h2 className="text-display-lg text-black">Notifications</h2>
+        </div>
+        <Button variant="magenta">
+          <AlertTriangle className="h-5 w-5" strokeWidth={1.5} />
           Emergency Broadcast
         </Button>
       </div>
@@ -28,32 +31,32 @@ export default async function NotificationsPage() {
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-left text-gray-600">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Type</th>
-                  <th className="px-4 py-3 font-medium">Title</th>
-                  <th className="px-4 py-3 font-medium">Recipient</th>
-                  <th className="px-4 py-3 font-medium">Channels</th>
-                  <th className="px-4 py-3 font-medium">Sent At</th>
-                  <th className="px-4 py-3 font-medium">Read</th>
+            <table className="w-full text-body-sm">
+              <thead className="text-left">
+                <tr className="border-b border-[#e6e6e6]">
+                  <th className="px-4 py-3 font-[480]">Type</th>
+                  <th className="px-4 py-3 font-[480]">Title</th>
+                  <th className="px-4 py-3 font-[480]">Recipient</th>
+                  <th className="px-4 py-3 font-[480]">Channels</th>
+                  <th className="px-4 py-3 font-[480]">Sent At</th>
+                  <th className="px-4 py-3 font-[480]">Read</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody>
                 {notifications.map((notification) => (
-                  <tr key={notification.id} className="hover:bg-gray-50">
+                  <tr key={notification.id} className="border-b border-[#f1f1f1] hover:bg-[#f7f7f5]">
                     <td className="px-4 py-3">
                       <Badge variant="default">{notification.type}</Badge>
                     </td>
-                    <td className="px-4 py-3 font-medium text-gray-900">{notification.title}</td>
-                    <td className="px-4 py-3 text-gray-600">{notification.user.name}</td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 font-[480]">{notification.title}</td>
+                    <td className="px-4 py-3">{notification.user.name}</td>
+                    <td className="px-4 py-3">
                       {((notification.channels as string[]) || []).join(", ")}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3">
                       {formatDate(notification.sentAt)}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3">
                       {notification.isRead ? "Yes" : "No"}
                     </td>
                   </tr>

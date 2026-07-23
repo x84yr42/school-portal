@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
 import { Archive } from "lucide-react";
 import Link from "next/link";
+import { Eyebrow } from "@school-portal/ui";
 import { AnnouncementsClient } from "./announcements-client";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +43,6 @@ export default async function AnnouncementsPage() {
     orderBy: { publishedAt: "desc" },
   });
 
-  // Filter out archived announcements and apply visibility
   const visibleAnnouncements = announcements
     .filter((a) => {
       const read = a.reads[0];
@@ -60,36 +60,42 @@ export default async function AnnouncementsPage() {
       hasAcknowledged: a.reads.length > 0 && a.reads[0]?.acknowledgedAt !== null,
     }));
 
-  // Count archived
   const archivedCount = announcements.filter((a) => {
     const read = a.reads[0];
     return read?.archivedAt !== null;
   }).length;
 
   return (
-    <div className="space-y-4 p-4 pb-24">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-900">Announcements</h2>
-        {archivedCount > 0 && (
-          <Link
-            href="/announcements/archived"
-            className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
-          >
-            <Archive className="h-4 w-4" />
-            Archived ({archivedCount})
-          </Link>
-        )}
+    <div className="space-y-6 pb-24">
+      {/* Lilac header strip */}
+      <div className="rounded-b-[24px] bg-[#c5b0f4] px-4 py-8">
+        <div className="mx-auto max-w-lg">
+          <Eyebrow>NEWS</Eyebrow>
+          <div className="mt-2 flex items-center justify-between">
+            <h2 className="text-display-lg text-black leading-none">Announcements</h2>
+            {archivedCount > 0 && (
+              <Link
+                href="/announcements/archived"
+                className="flex items-center gap-2 text-body-sm font-[480]"
+              >
+                <Archive className="h-4 w-4" strokeWidth={1.5} />
+                Archived ({archivedCount})
+              </Link>
+            )}
+          </div>
+          <p className="text-body-sm mt-2">Swipe left to archive.</p>
+        </div>
       </div>
 
-      <p className="text-xs text-gray-500">Swipe left on an announcement to archive it.</p>
+      <div className="px-4">
+        <AnnouncementsClient announcements={visibleAnnouncements} />
 
-      <AnnouncementsClient announcements={visibleAnnouncements} />
-
-      {visibleAnnouncements.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-          <p className="text-gray-500">No announcements to show.</p>
-        </div>
-      )}
+        {visibleAnnouncements.length === 0 && (
+          <div className="rounded-[24px] border border-[#e6e6e6] bg-white p-8 text-center">
+            <p className="text-body-sm">No announcements to show.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

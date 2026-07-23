@@ -75,11 +75,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-blue-50 px-4 pb-24">
-      <div className="w-full max-w-sm rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-blue-600">Little Scholars</h1>
-          <p className="mt-1 text-gray-600">Parent Registration</p>
+    <div className="flex min-h-screen items-center justify-center bg-white px-4 pb-24">
+      <div className="w-full max-w-sm rounded-[24px] border border-[#e6e6e6] bg-white p-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-display-lg text-black leading-none">Little Scholars</h1>
+          <p className="text-body-sm mt-2">Parent Registration</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -125,7 +125,7 @@ export default function RegisterPage() {
               <button
                 type="button"
                 onClick={addCode}
-                className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
+                className="flex items-center gap-1 text-caption font-[480]"
               >
                 <Plus className="h-3 w-3" />
                 Add another child
@@ -145,28 +145,28 @@ export default function RegisterPage() {
                   <button
                     type="button"
                     onClick={() => removeCode(index)}
-                    className="rounded-md border border-gray-200 px-2 text-gray-500 hover:bg-gray-50"
+                    className="rounded-[8px] border border-[#e6e6e6] px-2 hover:bg-[#f7f7f5]"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-4 w-4" strokeWidth={1.5} />
                   </button>
                 )}
               </div>
             ))}
-            <p className="text-xs text-gray-500">
+            <p className="text-caption">
               Enter the code(s) provided by the school to link your child(ren).
             </p>
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-body-sm text-[#ff3d8b]">{error}</p>}
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Creating account..." : "Create account"}
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-6 text-center text-body-sm">
           Already have an account?{" "}
-          <Link href="/login" className="text-blue-600 hover:underline">
+          <Link href="/login" className="font-[480] underline underline-offset-4">
             Sign in
           </Link>
         </p>

@@ -3,22 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-button",
   {
     variants: {
       variant: {
-        default: "bg-blue-600 text-white hover:bg-blue-700",
-        destructive: "bg-red-600 text-white hover:bg-red-700",
-        outline: "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
-        secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-        ghost: "hover:bg-gray-100",
-        link: "text-blue-600 underline-offset-4 hover:underline",
+        default: "bg-black text-white hover:bg-black/80 radius-pill",
+        secondary: "bg-white text-black border border-[#e6e6e6] hover:bg-[#f7f7f5] radius-pill",
+        destructive: "bg-black text-white hover:bg-red-600 radius-pill",
+        outline: "bg-white text-black border border-[#e6e6e6] hover:bg-[#f7f7f5] radius-pill",
+        ghost: "text-black hover:bg-[#f7f7f5] radius-pill",
+        link: "text-black underline-offset-4 hover:underline",
+        magenta: "bg-[#ff3d8b] text-white hover:bg-[#ff3d8b]/80 radius-pill",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-auto px-5 py-2.5",
+        sm: "h-auto px-4 py-2 text-[16px]",
+        lg: "h-auto px-8 py-3",
+        icon: "h-10 w-10 radius-full bg-[#f7f7f5]",
       },
     },
     defaultVariants: {

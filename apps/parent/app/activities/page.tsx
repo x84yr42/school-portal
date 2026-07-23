@@ -1,5 +1,5 @@
 import { prisma } from "@school-portal/database";
-import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge, Eyebrow } from "@school-portal/ui";
 import { formatDate, formatCurrency, daysUntil } from "@school-portal/shared";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -13,34 +13,37 @@ export default async function ActivitiesPage() {
   });
 
   return (
-    <div className="space-y-4 p-4 pb-24">
-      <h2 className="text-xl font-bold text-gray-900">Activities & Consent</h2>
+    <div className="space-y-6 p-4 pb-24">
+      <div>
+        <Eyebrow className="mb-2 block">CONSENT</Eyebrow>
+        <h2 className="text-display-lg text-black leading-none">Activities</h2>
+      </div>
 
       <div className="space-y-3">
         {activities.map((activity) => (
           <Link key={activity.id} href={`/activities/${activity.id}`}>
-            <Card className="transition-colors hover:bg-gray-50">
+            <Card className="transition-colors hover:bg-[#f7f7f5]">
               <CardHeader className="p-4 pb-2">
                 <div className="flex items-start justify-between gap-2">
-                  <CardTitle className="text-base">{activity.title}</CardTitle>
-                  <ChevronRight className="h-5 w-5 shrink-0 text-gray-400" />
+                  <CardTitle>{activity.title}</CardTitle>
+                  <ChevronRight className="h-5 w-5 shrink-0" strokeWidth={1.5} />
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-caption mt-1">
                   {activity.date && formatDate(activity.date)} · {activity.location}
                 </p>
               </CardHeader>
               <CardContent className="p-4 pt-0">
-                <p className="line-clamp-2 text-sm text-gray-700">{activity.description}</p>
-                <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
+                <p className="line-clamp-2 text-body-sm">{activity.description}</p>
+                <div className="mt-3 flex items-center gap-3 text-caption">
                   {activity.cost && <span>{formatCurrency(Number(activity.cost))}</span>}
                   {activity.deadline && (
-                    <span className="text-red-600">Due in {daysUntil(activity.deadline)} days</span>
+                    <span className="text-[#ff3d8b]">Due in {daysUntil(activity.deadline)} days</span>
                   )}
                 </div>
                 {activity.consentRequired && (
-                  <span className="mt-2 inline-block rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-800">
+                  <Badge variant="outline" className="mt-2">
                     Consent required
-                  </span>
+                  </Badge>
                 )}
               </CardContent>
             </Card>

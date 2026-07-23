@@ -4,11 +4,11 @@ export async function Header() {
   const session = await auth();
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-8">
-      <h1 className="text-xl font-semibold text-gray-900">Admin Portal</h1>
+    <header className="flex h-14 items-center justify-between border-b border-[#e6e6e6] bg-white px-8">
+      <h1 className="text-headline text-black">Admin Portal</h1>
       <div className="flex items-center gap-4">
-        <span className="text-sm text-gray-600">{session?.user?.name}</span>
-        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+        <span className="text-body-sm font-[330] text-black">{session?.user?.name}</span>
+        <span className="inline-flex items-center radius-pill bg-black px-3 py-1 text-[13px] font-[480] text-white">
           {session?.user?.role}
         </span>
       </div>

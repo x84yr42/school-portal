@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge, ColorBlock, Eyebrow } from "@school-portal/ui";
 import { formatDate, formatCurrency, isOverdue } from "@school-portal/shared";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
@@ -26,26 +26,29 @@ export default async function BillingPage() {
     .reduce((sum, i) => sum + Number(i.totalAmount) - Number(i.amountPaid), 0);
 
   return (
-    <div className="space-y-4 p-4 pb-24">
-      <h2 className="text-xl font-bold text-gray-900">Billing</h2>
+    <div className="space-y-6 pb-24">
+      {/* Cream header */}
+      <div className="rounded-b-[24px] bg-[#f4ecd6] px-4 py-8">
+        <div className="mx-auto max-w-lg">
+          <Eyebrow>BILLING</Eyebrow>
+          <h2 className="text-display-lg text-black leading-none mt-2">Invoices</h2>
+          <div className="mt-4">
+            <p className="text-caption">TOTAL OUTSTANDING</p>
+            <p className="text-card-title">{formatCurrency(totalOutstanding)}</p>
+          </div>
+        </div>
+      </div>
 
-      <Card>
-        <CardContent className="p-4">
-          <p className="text-sm text-gray-500">Total Outstanding</p>
-          <p className="text-3xl font-bold text-gray-900">{formatCurrency(totalOutstanding)}</p>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-3">
+      <div className="space-y-3 px-4">
         {invoices.map((invoice) => {
           const hasPendingPayment = invoice.payments.some((p) => p.status === "PENDING");
           const hasConfirmedPayment = invoice.payments.some((p) => p.status === "CONFIRMED");
           return (
             <Link key={invoice.id} href={`/billing/${invoice.id}`}>
-              <Card className="transition-colors hover:bg-gray-50">
+              <Card className="transition-colors hover:bg-[#f7f7f5]">
                 <CardHeader className="p-4 pb-2">
                   <div className="flex items-start justify-between">
-                    <CardTitle className="text-base">{invoice.description}</CardTitle>
+                    <CardTitle>{invoice.description}</CardTitle>
                     <Badge
                       variant={
                         invoice.status === "PAID"
@@ -64,24 +67,24 @@ export default async function BillingPage() {
                             : "Pending"}
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-caption mt-1">
                     {invoice.student.firstName} {invoice.student.lastName}
                   </p>
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-bold">{formatCurrency(Number(invoice.totalAmount))}</span>
-                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                    <span className="text-body-lg font-[480]">{formatCurrency(Number(invoice.totalAmount))}</span>
+                    <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
                   </div>
-                  <p className="text-xs text-gray-500">Due {formatDate(invoice.dueDate)}</p>
+                  <p className="text-caption mt-1">Due {formatDate(invoice.dueDate)}</p>
                   {isOverdue(invoice.dueDate) && invoice.status !== "PAID" && (
-                    <p className="mt-2 text-xs text-red-600">Overdue</p>
+                    <p className="mt-2 text-caption text-[#ff3d8b]">Overdue</p>
                   )}
                   {hasPendingPayment && !hasConfirmedPayment && (
-                    <p className="mt-2 text-xs text-yellow-600">Payment pending review</p>
+                    <p className="mt-2 text-caption">Payment pending review</p>
                   )}
                   {hasConfirmedPayment && invoice.status !== "PAID" && (
-                    <p className="mt-2 text-xs text-green-600">Partial payment confirmed</p>
+                    <p className="mt-2 text-caption text-[#1ea64a]">Partial payment confirmed</p>
                   )}
                 </CardContent>
               </Card>

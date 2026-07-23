@@ -4,4 +4,6 @@ export { Badge } from "./components/badge";
 export { Input } from "./components/input";
 export { Label } from "./components/label";
 export { Textarea } from "./components/textarea";
+export { ColorBlock } from "./components/color-block";
+export { Eyebrow } from "./components/eyebrow";
 export { cn } from "./lib/utils";

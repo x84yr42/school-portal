@@ -1,12 +1,14 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
-import { Bell, CalendarCheck, CreditCard, Megaphone, ChevronRight } from "lucide-react";
-import { formatDate, formatCurrency, daysUntil } from "@school-portal/shared";
+import { Card, CardContent, CardHeader, CardTitle, ColorBlock, Eyebrow } from "@school-portal/ui";
+import { Bell, ChevronRight } from "lucide-react";
+import { formatDate, daysUntil } from "@school-portal/shared";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+const accentColors = ["lime", "lilac", "cream", "mint", "pink", "coral"] as const;
 
 export default async function HomePage() {
   const session = await auth();
@@ -34,7 +36,7 @@ export default async function HomePage() {
     ),
   };
 
-  const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1; // 0=Monday
+  const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
   const [allAnnouncements, activities, invoices, unreadCount] = await Promise.all([
     prisma.announcement.findMany({
@@ -57,7 +59,6 @@ export default async function HomePage() {
     }),
   ]);
 
-  // Get today's schedule for each child
   const childrenWithSchedules = await Promise.all(
     children.map(async (family) => {
       const classId = family.student.enrollments[0]?.classId;
@@ -79,136 +80,126 @@ export default async function HomePage() {
           : Promise.resolve([]),
       ]);
 
-      return {
-        student: family.student,
-        classSchedule,
-        workshopSchedule,
-      };
+      return { student: family.student, classSchedule, workshopSchedule };
     })
   );
 
   const announcements = allAnnouncements.filter((a) => isAnnouncementVisible(a.targetAudience, context)).slice(0, 3);
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-8 p-4">
+      {/* Hero */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Good day, {user?.name?.split(" ")[0]}</h1>
-          <p className="text-sm text-gray-500">Here is what is happening today.</p>
+          <h1 className="text-display-lg text-black leading-none">
+            Good day, {user?.name?.split(" ")[0]}
+          </h1>
+          <p className="text-body-sm mt-2">Here is what is happening today.</p>
         </div>
-        <Link href="/notifications" className="relative">
-          <Bell className="h-6 w-6 text-gray-600" />
+        <Link href="/notifications" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f7f7f5]">
+          <Bell className="h-5 w-5" strokeWidth={1.5} />
           {unreadCount > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+            <span className="absolute flex h-4 w-4 items-center justify-center rounded-full bg-[#ff3d8b] text-[10px] font-[480] text-white">
               {unreadCount}
             </span>
           )}
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <Card>
-          <CardContent className="p-4">
-            <Megaphone className="mb-2 h-5 w-5 text-blue-600" />
-            <div className="text-2xl font-bold">{announcements.length}</div>
-            <div className="text-xs text-gray-500">Latest News</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <CreditCard className="mb-2 h-5 w-5 text-red-600" />
-            <div className="text-2xl font-bold">{invoices.length}</div>
-            <div className="text-xs text-gray-500">Pending Bills</div>
-          </CardContent>
-        </Card>
+      {/* Stats — pastel blocks */}
+      <div className="grid grid-cols-2 gap-4">
+        <ColorBlock color="lime" className="p-5">
+          <p className="text-caption">LATEST NEWS</p>
+          <p className="text-card-title mt-1">{announcements.length}</p>
+        </ColorBlock>
+        <ColorBlock color="pink" className="p-5">
+          <p className="text-caption">PENDING BILLS</p>
+          <p className="text-card-title mt-1">{invoices.length}</p>
+        </ColorBlock>
       </div>
 
-      <Card>
-        <CardHeader className="p-4 pb-2">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Latest Announcements</CardTitle>
-            <Link href="/announcements" className="text-xs text-blue-600">
-              See all
-            </Link>
+      {/* Announcements preview */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <Eyebrow>ANNOUNCEMENTS</Eyebrow>
+          <Link href="/announcements" className="text-body-sm font-[480]">
+            See all
+          </Link>
+        </div>
+        {announcements.length === 0 ? (
+          <p className="text-body-sm">No announcements yet.</p>
+        ) : (
+          <div className="space-y-2">
+            {announcements.map((announcement) => (
+              <Link
+                key={announcement.id}
+                href={`/announcements/${announcement.id}`}
+                className="flex items-center justify-between gap-3 rounded-[24px] border border-[#e6e6e6] bg-white p-4 hover:bg-[#f7f7f5] transition-colors"
+              >
+                <div className="min-w-0">
+                  <p className="text-body-sm font-[480] truncate">{announcement.title}</p>
+                  <p className="text-caption mt-1">{formatDate(announcement.createdAt)}</p>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0" strokeWidth={1.5} />
+              </Link>
+            ))}
           </div>
-        </CardHeader>
-        <CardContent className="p-4 pt-0">
-          {announcements.length === 0 ? (
-            <p className="text-sm text-gray-500">No announcements yet.</p>
-          ) : (
-            <div className="space-y-2">
-              {announcements.map((announcement) => (
-                <Link
-                  key={announcement.id}
-                  href={`/announcements/${announcement.id}`}
-                  className="block rounded-md bg-gray-50 p-2 text-sm hover:bg-gray-100"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="font-medium text-gray-900 line-clamp-1">{announcement.title}</span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-gray-400" />
-                  </div>
-                  <p className="text-xs text-gray-500">{formatDate(announcement.createdAt)}</p>
-                </Link>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        )}
+      </div>
 
-      <Card>
-        <CardHeader className="p-4 pb-2">
-          <CardTitle className="text-base">Pending Activities</CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 pt-0">
-          {activities.length === 0 ? (
-            <p className="text-sm text-gray-500">No pending activities.</p>
-          ) : (
-            <div className="space-y-2">
-              {activities.map((activity) => (
-                <Link
-                  key={activity.id}
-                  href={`/activities/${activity.id}`}
-                  className="block rounded-md border border-gray-100 p-2 text-sm hover:bg-gray-50"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span className="font-medium text-gray-900">{activity.title}</span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-gray-400" />
-                  </div>
+      {/* Pending Activities */}
+      <div>
+        <Eyebrow className="mb-4 block">ACTIVITIES</Eyebrow>
+        {activities.length === 0 ? (
+          <p className="text-body-sm">No pending activities.</p>
+        ) : (
+          <div className="space-y-2">
+            {activities.map((activity) => (
+              <Link
+                key={activity.id}
+                href={`/activities/${activity.id}`}
+                className="flex items-center justify-between gap-3 rounded-[24px] border border-[#e6e6e6] bg-white p-4 hover:bg-[#f7f7f5] transition-colors"
+              >
+                <div className="min-w-0">
+                  <p className="text-body-sm font-[480]">{activity.title}</p>
                   {activity.deadline && (
-                    <div className="text-xs text-red-600">
+                    <p className="text-caption mt-1 text-[#ff3d8b]">
                       Due in {daysUntil(activity.deadline)} days
-                    </div>
+                    </p>
                   )}
-                </Link>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+                <ChevronRight className="h-4 w-4 shrink-0" strokeWidth={1.5} />
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
 
-      {childrenWithSchedules.map((child) => {
+      {/* Per-child schedule cards */}
+      {childrenWithSchedules.map((child, idx) => {
         const hasSchedule = child.classSchedule.length > 0 || child.workshopSchedule.length > 0;
+        const accent = accentColors[idx % accentColors.length];
         return (
           <Card key={child.student.id}>
+            {/* Color accent strip */}
+            <div className={`h-2 rounded-t-[24px] bg-block-${accent}`} />
             <CardHeader className="p-4 pb-2">
-              <CardTitle className="text-base">
-                {child.student.firstName}&apos;s Schedule Today
-              </CardTitle>
+              <CardTitle>{child.student.firstName}&apos;s Schedule Today</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0">
               {!hasSchedule ? (
-                <p className="text-sm text-gray-500">No classes or workshops today.</p>
+                <p className="text-body-sm">No classes or workshops today.</p>
               ) : (
                 <div className="space-y-3">
                   {child.classSchedule.length > 0 && (
                     <div>
-                      <p className="mb-1 text-xs font-medium text-gray-500 uppercase">Classes</p>
+                      <p className="text-caption mb-2">CLASSES</p>
                       <div className="space-y-1">
                         {child.classSchedule.map((slot) => (
-                          <div key={slot.id} className="flex items-center justify-between rounded-md bg-gray-50 p-2 text-sm">
-                            <span className="font-medium text-gray-900">{slot.subject.name}</span>
-                            <span className="text-gray-600">
-                              {slot.startTime} - {slot.endTime}
+                          <div key={slot.id} className="flex items-center justify-between rounded-[8px] bg-[#f7f7f5] p-3 text-body-sm">
+                            <span className="font-[480]">{slot.subject.name}</span>
+                            <span className="text-body-sm">
+                              {slot.startTime} – {slot.endTime}
                             </span>
                           </div>
                         ))}
@@ -217,13 +208,13 @@ export default async function HomePage() {
                   )}
                   {child.workshopSchedule.length > 0 && (
                     <div>
-                      <p className="mb-1 text-xs font-medium text-gray-500 uppercase">Workshops</p>
+                      <p className="text-caption mb-2">WORKSHOPS</p>
                       <div className="space-y-1">
-                        {child.workshopSchedule.map((ws, idx) => (
-                          <div key={idx} className="flex items-center justify-between rounded-md bg-blue-50 p-2 text-sm">
-                            <span className="font-medium text-gray-900">{ws.name}</span>
-                            <span className="text-gray-600">
-                              {ws.scheduleStartTime} - {ws.scheduleEndTime}
+                        {child.workshopSchedule.map((ws, i) => (
+                          <div key={i} className="flex items-center justify-between rounded-[8px] bg-[#f7f7f5] p-3 text-body-sm">
+                            <span className="font-[480]">{ws.name}</span>
+                            <span className="text-body-sm">
+                              {ws.scheduleStartTime} – {ws.scheduleEndTime}
                             </span>
                           </div>
                         ))}

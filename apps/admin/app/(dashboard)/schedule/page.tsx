@@ -1,5 +1,5 @@
 import { prisma } from "@school-portal/database";
-import { Card, CardContent, CardHeader, CardTitle } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, Eyebrow } from "@school-portal/ui";
 import { formatTime, DAYS_OF_WEEK } from "@school-portal/shared";
 import { ScheduleForm } from "@/components/schedule-form";
 
@@ -25,8 +25,11 @@ export default async function SchedulePage() {
   }));
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Class Schedule</h2>
+    <div className="space-y-12">
+      <div>
+        <Eyebrow className="mb-2 block">TIMETABLE</Eyebrow>
+        <h2 className="text-display-lg text-black">Class Schedule</h2>
+      </div>
 
       <ScheduleForm
         classes={classes.map((c) => ({ id: c.id, name: c.name, grade: c.grade }))}
@@ -38,19 +41,19 @@ export default async function SchedulePage() {
         {slotsByDay.map(({ day, slots }) => (
           <Card key={day}>
             <CardHeader>
-              <CardTitle className="text-base">{day}</CardTitle>
+              <CardTitle className="text-body-lg">{day}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {slots.length === 0 ? (
-                <p className="text-sm text-gray-500">No slots</p>
+                <p className="text-body-sm">No slots</p>
               ) : (
                 slots.map((slot) => (
-                  <div key={slot.id} className="rounded-md bg-gray-50 p-2 text-sm">
-                    <div className="font-medium text-gray-900">{slot.subject.name}</div>
-                    <div className="text-gray-600">
-                      {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
+                  <div key={slot.id} className="rounded-[8px] bg-[#f7f7f5] p-3 text-body-sm">
+                    <div className="font-[480]">{slot.subject.name}</div>
+                    <div>
+                      {formatTime(slot.startTime)} – {formatTime(slot.endTime)}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-[13px]">
                       {slot.class.name} · {slot.teacher?.name || "—"}
                     </div>
                   </div>
