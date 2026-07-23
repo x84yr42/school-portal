@@ -1,9 +1,15 @@
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export default auth((req) => {
+function hasSessionCookie(req: NextRequest): boolean {
+  return !!(
+    req.cookies.get("next-auth.session-token")?.value ||
+    req.cookies.get("__Secure-next-auth.session-token")?.value
+  );
+}
+
+export default function middleware(req: NextRequest) {
   const { nextUrl } = req;
-  const isAuthenticated = !!req.auth;
+  const isAuthenticated = hasSessionCookie(req);
   const isLoginPage = nextUrl.pathname === "/login";
 
   if (!isAuthenticated && !isLoginPage) {
@@ -15,7 +21,7 @@ export default auth((req) => {
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
