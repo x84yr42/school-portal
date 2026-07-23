@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
 function hasSessionCookie(req: NextRequest): boolean {
-  return !!(
-    req.cookies.get("next-auth.session-token")?.value ||
-    req.cookies.get("__Secure-next-auth.session-token")?.value
+  const cookies = req.cookies.getAll();
+  return cookies.some(
+    (c) =>
+      c.name === "next-auth.session-token" ||
+      c.name === "__Secure-next-auth.session-token" ||
+      c.name.endsWith(".next-auth.session-token") ||
+      c.name.endsWith(".__Secure-next-auth.session-token")
   );
 }
 
