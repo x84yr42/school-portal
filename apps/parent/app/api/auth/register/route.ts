@@ -5,11 +5,20 @@ import { hashSync } from "bcryptjs";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { email, password, name, code } = body;
+    const { email, password, name, code, codes: rawCodes } = body;
 
-    if (!email || !password || !name || !code) {
+    // Support both single code (legacy) and multiple codes
+    const codes: string[] = rawCodes
+      ? Array.isArray(rawCodes)
+        ? rawCodes
+        : [rawCodes]
+      : code
+        ? [code]
+        : [];
+
+    if (!email || !password || !name || codes.length === 0) {
       return NextResponse.json(
-        { error: "All fields are required" },
+        { error: "All fields are required, including at least one student code" },
         { status: 400 }
       );
     }
@@ -22,30 +31,36 @@ export async function POST(req: Request) {
       );
     }
 
-    const linkCode = await prisma.studentLinkCode.findUnique({
-      where: { code },
-      include: { student: true },
-    });
+    // Validate all codes first
+    const linkCodes = [];
+    for (const c of codes) {
+      const linkCode = await prisma.studentLinkCode.findUnique({
+        where: { code: c },
+        include: { student: true },
+      });
 
-    if (!linkCode) {
-      return NextResponse.json(
-        { error: "Invalid student code" },
-        { status: 400 }
-      );
-    }
+      if (!linkCode) {
+        return NextResponse.json(
+          { error: `Invalid student code: ${c}` },
+          { status: 400 }
+        );
+      }
 
-    if (linkCode.isUsed && linkCode.usedByUserId) {
-      return NextResponse.json(
-        { error: "This code has already been used" },
-        { status: 400 }
-      );
-    }
+      if (linkCode.isUsed && linkCode.usedByUserId) {
+        return NextResponse.json(
+          { error: `This code has already been used: ${c}` },
+          { status: 400 }
+        );
+      }
 
-    if (linkCode.expiresAt && new Date() > linkCode.expiresAt) {
-      return NextResponse.json(
-        { error: "This code has expired" },
-        { status: 400 }
-      );
+      if (linkCode.expiresAt && new Date() > linkCode.expiresAt) {
+        return NextResponse.json(
+          { error: `This code has expired: ${c}` },
+          { status: 400 }
+        );
+      }
+
+      linkCodes.push(linkCode);
     }
 
     const hashedPassword = hashSync(password, 10);
@@ -59,23 +74,27 @@ export async function POST(req: Request) {
       },
     });
 
-    await prisma.family.create({
-      data: {
-        userId: user.id,
-        studentId: linkCode.studentId,
-        relationship: "Parent/Guardian",
-        isPrimary: true,
-      },
-    });
+    // Link all children
+    for (let i = 0; i < linkCodes.length; i++) {
+      const linkCode = linkCodes[i];
+      await prisma.family.create({
+        data: {
+          userId: user.id,
+          studentId: linkCode.studentId,
+          relationship: "Parent/Guardian",
+          isPrimary: i === 0,
+        },
+      });
 
-    await prisma.studentLinkCode.update({
-      where: { id: linkCode.id },
-      data: {
-        isUsed: true,
-        usedByUserId: user.id,
-        usedAt: new Date(),
-      },
-    });
+      await prisma.studentLinkCode.update({
+        where: { id: linkCode.id },
+        data: {
+          isUsed: true,
+          usedByUserId: user.id,
+          usedAt: new Date(),
+        },
+      });
+    }
 
     return NextResponse.json(
       { message: "Account created successfully", userId: user.id },

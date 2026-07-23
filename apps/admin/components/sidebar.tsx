@@ -22,6 +22,7 @@ import { cn } from "@school-portal/ui";
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/students", label: "Students", icon: Users },
+  { href: "/parents", label: "Parents", icon: Users },
   { href: "/teachers", label: "Teachers", icon: BookOpen },
   { href: "/classes", label: "Classes", icon: GraduationCap },
   { href: "/workshops", label: "Workshops", icon: Palette },

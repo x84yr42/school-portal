@@ -5,25 +5,48 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button, Input, Label } from "@school-portal/ui";
+import { Plus, X } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
+  const [codes, setCodes] = useState<string[]>([""]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  function addCode() {
+    setCodes([...codes, ""]);
+  }
+
+  function removeCode(index: number) {
+    if (codes.length <= 1) return;
+    setCodes(codes.filter((_, i) => i !== index));
+  }
+
+  function updateCode(index: number, value: string) {
+    const newCodes = [...codes];
+    newCodes[index] = value.toUpperCase();
+    setCodes(newCodes);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    const validCodes = codes.filter((c) => c.trim() !== "");
+    if (validCodes.length === 0) {
+      setError("Please enter at least one student code");
+      setLoading(false);
+      return;
+    }
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, code }),
+      body: JSON.stringify({ name, email, password, codes: validCodes }),
     });
 
     const data = await res.json();
@@ -97,17 +120,40 @@ export default function RegisterPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="code">Student Link Code</Label>
-            <Input
-              id="code"
-              type="text"
-              placeholder="e.g. MARIA2026"
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase())}
-              required
-            />
+            <div className="flex items-center justify-between">
+              <Label>Student Link Codes</Label>
+              <button
+                type="button"
+                onClick={addCode}
+                className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
+              >
+                <Plus className="h-3 w-3" />
+                Add another child
+              </button>
+            </div>
+            {codes.map((code, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  type="text"
+                  placeholder={`e.g. MARIA2026`}
+                  value={code}
+                  onChange={(e) => updateCode(index, e.target.value)}
+                  required={codes.length === 1}
+                  className="flex-1"
+                />
+                {codes.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeCode(index)}
+                    className="rounded-md border border-gray-200 px-2 text-gray-500 hover:bg-gray-50"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            ))}
             <p className="text-xs text-gray-500">
-              Enter the code provided by the school to link your child.
+              Enter the code(s) provided by the school to link your child(ren).
             </p>
           </div>
 

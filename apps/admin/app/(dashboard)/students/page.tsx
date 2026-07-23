@@ -4,13 +4,19 @@ import { StudentsClient } from "@/components/students-client";
 export const dynamic = "force-dynamic";
 
 export default async function StudentsPage() {
-  const students = await prisma.student.findMany({
-    include: {
-      enrollments: { include: { class: true } },
-      families: { include: { user: true } },
-    },
-    orderBy: { lastName: "asc" },
-  });
+  const [students, classes] = await Promise.all([
+    prisma.student.findMany({
+      include: {
+        enrollments: { include: { class: true } },
+        families: { include: { user: true } },
+      },
+      orderBy: { lastName: "asc" },
+    }),
+    prisma.class.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+  ]);
 
   const serialized = students.map((s) => ({
     ...s,
@@ -28,5 +34,5 @@ export default async function StudentsPage() {
     })),
   }));
 
-  return <StudentsClient initialStudents={serialized} />;
+  return <StudentsClient initialStudents={serialized} classes={classes} />;
 }
