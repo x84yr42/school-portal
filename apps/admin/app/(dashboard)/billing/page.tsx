@@ -6,7 +6,7 @@ import { InvoiceForm } from "@/components/invoice-form";
 export const dynamic = "force-dynamic";
 
 export default async function BillingPage() {
-  const [invoices, students] = await Promise.all([
+  const [invoices, students, categories] = await Promise.all([
     prisma.invoice.findMany({
       include: { student: true, payments: true },
       orderBy: { dueDate: "desc" },
@@ -14,6 +14,10 @@ export default async function BillingPage() {
     prisma.student.findMany({
       where: { isActive: true },
       orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+    }),
+    prisma.invoiceCategory.findMany({
+      where: { isActive: true },
+      orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     }),
   ]);
 
@@ -36,6 +40,7 @@ export default async function BillingPage() {
 
       <InvoiceForm
         students={students.map((s) => ({ id: s.id, firstName: s.firstName, lastName: s.lastName }))}
+        initialCategories={categories.map((c) => ({ id: c.id, name: c.name, isActive: c.isActive, sortOrder: c.sortOrder }))}
       />
 
       <Card>

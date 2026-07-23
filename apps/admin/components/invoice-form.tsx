@@ -4,25 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label } from "@school-portal/ui";
 import { Search, Plus, X } from "lucide-react";
+import { InvoiceCategoryManager } from "@/components/invoice-category-manager";
 
 interface InvoiceFormProps {
   students: { id: string; firstName: string; lastName: string }[];
+  initialCategories?: { id: string; name: string; isActive: boolean; sortOrder: number }[];
 }
-
-const LINE_ITEM_CATEGORIES = [
-  "Tuition",
-  "Miscellaneous Fees",
-  "Books & Materials",
-  "Uniform",
-  "Activities & Events",
-  "Field Trip",
-  "Transportation",
-  "Meals",
-  "Insurance",
-  "Technology Fee",
-  "Laboratory Fee",
-  "Other",
-];
 
 interface LineItem {
   category: string;
@@ -30,7 +17,13 @@ interface LineItem {
   amount: string;
 }
 
-export function InvoiceForm({ students }: InvoiceFormProps) {
+const DEFAULT_CATEGORIES = [
+  "Tuition", "Miscellaneous Fees", "Books & Materials", "Uniform",
+  "Activities & Events", "Field Trip", "Transportation", "Meals",
+  "Insurance", "Technology Fee", "Laboratory Fee", "Other",
+];
+
+export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<{ id: string; firstName: string; lastName: string } | null>(null);
@@ -38,6 +31,8 @@ export function InvoiceForm({ students }: InvoiceFormProps) {
   const [suggestions, setSuggestions] = useState<typeof students>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [lineItems, setLineItems] = useState<LineItem[]>([{ category: "", description: "", amount: "" }]);
+  const [categories, setCategories] = useState(initialCategories ?? []);
+  const categoryNames = categories.length > 0 ? categories.map((c) => c.name) : DEFAULT_CATEGORIES;
   const [formData, setFormData] = useState({
     description: "",
     dueDate: "",
@@ -211,6 +206,9 @@ export function InvoiceForm({ students }: InvoiceFormProps) {
         </div>
       </div>
 
+      {/* Category manager */}
+      <InvoiceCategoryManager categories={categories} onCategoriesChange={setCategories} />
+
       {/* Line items with categories */}
       <div className="space-y-2">
         <Label>Line Items</Label>
@@ -224,7 +222,7 @@ export function InvoiceForm({ students }: InvoiceFormProps) {
                 onChange={(e) => updateLineItem(index, "category", e.target.value)}
               >
                 <option value="">Select category</option>
-                {LINE_ITEM_CATEGORIES.map((cat) => (
+                {categoryNames.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>

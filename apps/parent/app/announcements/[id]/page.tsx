@@ -1,8 +1,10 @@
 import { prisma } from "@school-portal/database";
-import { Card, CardContent, Badge, Button } from "@school-portal/ui";
+import { auth } from "@/lib/auth";
+import { Card, CardContent, Badge } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { AcknowledgeButton } from "./acknowledge-button";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,8 @@ interface PageProps {
 
 export default async function AnnouncementDetailPage({ params }: PageProps) {
   const { id } = await params;
+  const session = await auth();
+
   const announcement = await prisma.announcement.findUnique({
     where: { id },
     include: { author: true },
@@ -24,6 +28,20 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
       </div>
     );
   }
+
+  // Check if user has already acknowledged
+  const existingRead = session?.user?.id
+    ? await prisma.announcementRead.findUnique({
+        where: {
+          announcementId_userId: {
+            announcementId: id,
+            userId: session.user.id,
+          },
+        },
+      })
+    : null;
+
+  const hasAcknowledged = existingRead?.acknowledgedAt !== null;
 
   return (
     <div className="space-y-4 p-4 pb-24">
@@ -46,7 +64,12 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
           <p className="whitespace-pre-wrap text-gray-700">{announcement.body}</p>
 
           {announcement.requiresAck && (
-            <Button className="mt-6 w-full">Mark as Read</Button>
+            <div className="mt-6">
+              <AcknowledgeButton
+                announcementId={id}
+                hasAcknowledged={hasAcknowledged}
+              />
+            </div>
           )}
         </CardContent>
       </Card>

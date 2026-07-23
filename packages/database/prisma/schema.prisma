@@ -472,6 +472,18 @@ model PickupContact {
   @@map("pickup_contacts")
 }
 
+// ─── INVOICE CATEGORIES ─────────────────────────────────────────────────────
+
+model InvoiceCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("invoice_categories")
+}
+
 // ─── SCHOOL SETTINGS ─────────────────────────────────────────────────────────
 
 model SchoolSettings {
