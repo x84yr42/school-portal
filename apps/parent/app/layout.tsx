@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { BottomNav } from "@/components/bottom-nav";
 import { AuthProvider } from "@/components/auth-provider";
+import { ConfirmProvider, Toaster } from "@school-portal/ui";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -28,9 +29,12 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body className="bg-white pb-20">
         <AuthProvider>
-          <main className="mx-auto max-w-lg">{children}</main>
-          <BottomNav />
+          <ConfirmProvider>
+            <main className="mx-auto max-w-lg">{children}</main>
+            <BottomNav />
+          </ConfirmProvider>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );

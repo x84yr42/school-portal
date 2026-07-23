@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Label, Textarea } from "@school-portal/ui";
+import { Button, Input, Label, Textarea, useConfirm, toast } from "@school-portal/ui";
 
 interface Workshop {
   id: string;
@@ -26,6 +26,7 @@ const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: workshop?.name ?? "",
@@ -56,21 +57,31 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
     });
 
     if (res.ok) {
+      toast.success(isEdit ? "Workshop updated" : "Workshop created");
       router.refresh();
       onClose();
     } else {
       const data = await res.json();
-      alert(data.error || "Failed to save workshop");
+      toast.error(data.error || "Failed to save workshop");
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!workshop || !window.confirm("Delete this workshop?")) return;
+    if (!workshop) return;
+    const ok = await confirm({
+      title: "Delete workshop?",
+      description: "This will remove the workshop and its enrollments.",
+      confirmText: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/workshops?id=${workshop.id}`, { method: "DELETE" });
     if (res.ok) {
+      toast.success("Workshop deleted");
       router.refresh();
       onClose();
+    } else {
+      toast.error("Failed to delete workshop");
     }
   }
 

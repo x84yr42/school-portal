@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Label, Textarea } from "@school-portal/ui";
+import { Button, Input, Label, Textarea, useConfirm, toast } from "@school-portal/ui";
 import { Plus, X, Image } from "@school-portal/ui";
 
 interface Activity {
@@ -34,6 +34,7 @@ interface ActivityFormProps {
 
 export function ActivityForm({ activity, onClose }: ActivityFormProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [images, setImages] = useState<string[]>(
@@ -101,23 +102,30 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
     });
 
     if (res.ok) {
+      toast.success(isEdit ? "Activity updated" : "Activity created");
       router.refresh();
       onClose();
     } else {
-      const data = await res.json();
-      // silently fail - user can retry
+      toast.error("Failed to save activity. Please try again.");
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!activity || !window.confirm("Delete this activity?")) return;
+    if (!activity) return;
+    const ok = await confirm({
+      title: "Delete activity?",
+      description: "This will remove the activity and all parent responses.",
+      confirmText: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/activities?id=${activity.id}`, { method: "DELETE" });
     if (res.ok) {
+      toast.success("Activity deleted");
       router.refresh();
       onClose();
     } else {
-      // silently fail - user can retry
+      toast.error("Failed to delete activity. Please try again.");
     }
   }
 

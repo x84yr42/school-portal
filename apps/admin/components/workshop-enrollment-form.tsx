@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Label } from "@school-portal/ui";
+import { Button, Input, Label, useConfirm, toast } from "@school-portal/ui";
 import { Search, UserPlus, X, Users } from "@school-portal/ui";
 
 interface WorkshopEnrollmentFormProps {
@@ -25,6 +25,7 @@ export function WorkshopEnrollmentForm({
   workshopId,
 }: WorkshopEnrollmentFormProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [selectedWorkshop, setSelectedWorkshop] = useState(workshopId ?? "");
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState<typeof allStudents>([]);
@@ -86,16 +87,23 @@ export function WorkshopEnrollmentForm({
   }
 
   async function removeEnrolledStudent(studentId: string) {
-    if (!selectedWorkshop || !window.confirm("Remove this student from the workshop?")) return;
+    if (!selectedWorkshop) return;
+    const ok = await confirm({
+      title: "Remove student?",
+      description: "This unenrolls the student from the workshop.",
+      confirmText: "Remove",
+    });
+    if (!ok) return;
     const res = await fetch(
       `/api/workshops/enroll?workshopGroupId=${selectedWorkshop}&studentId=${studentId}`,
       { method: "DELETE" }
     );
     if (res.ok) {
       setEnrolledStudents(enrolledStudents.filter((s) => s.id !== studentId));
+      toast.success("Student removed from workshop");
       router.refresh();
     } else {
-      // silently fail - user can retry
+      toast.error("Failed to remove student");
     }
   }
 
@@ -115,11 +123,12 @@ export function WorkshopEnrollmentForm({
     if (res.ok) {
       // Move newly enrolled to the enrolled list
       setEnrolledStudents([...enrolledStudents, ...selectedStudents]);
+      toast.success(`Enrolled ${selectedStudents.length} student${selectedStudents.length === 1 ? "" : "s"}`);
       setSelectedStudents([]);
       setShowConfirm(false);
       router.refresh();
     } else {
-      // silently fail - user can retry
+      toast.error("Failed to enroll students. Please try again.");
     }
     setLoading(false);
   }

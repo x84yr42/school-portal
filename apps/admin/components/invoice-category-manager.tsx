@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button, Input, Label } from "@school-portal/ui";
+import { Button, Input, Label, useConfirm, toast } from "@school-portal/ui";
 import { Plus, Pencil, X, Check, FolderOpen } from "@school-portal/ui";
 
 interface Category {
@@ -23,6 +23,7 @@ export function InvoiceCategoryManager({
   const [editName, setEditName] = useState("");
   const [newName, setNewName] = useState("");
   const [loading, setLoading] = useState(false);
+  const confirm = useConfirm();
 
   async function handleAdd() {
     if (!newName.trim()) return;
@@ -62,13 +63,19 @@ export function InvoiceCategoryManager({
   }
 
   async function handleDelete(id: string) {
-    if (!window.confirm("Delete this category?")) return;
+    const ok = await confirm({
+      title: "Delete category?",
+      description: "Invoices already using this category are not affected.",
+      confirmText: "Delete",
+    });
+    if (!ok) return;
     setLoading(true);
     const res = await fetch(`/api/invoice-categories?id=${id}`, { method: "DELETE" });
     if (res.ok) {
       onCategoriesChange(categories.filter((c) => c.id !== id));
+      toast.success("Category deleted");
     } else {
-      // silently fail - user can retry
+      toast.error("Failed to delete category");
     }
     setLoading(false);
   }

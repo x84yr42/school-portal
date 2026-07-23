@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge, Button, useConfirm, toast } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
 import { X, Trash, CheckCheck } from "@school-portal/ui";
 import Link from "next/link";
@@ -19,6 +19,7 @@ interface Notification {
 
 export function NotificationsClient({ notifications: initial }: { notifications: Notification[] }) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [notifications, setNotifications] = useState(initial);
 
   async function dismissNotification(id: string) {
@@ -42,11 +43,17 @@ export function NotificationsClient({ notifications: initial }: { notifications:
   }
 
   async function clearAll() {
-    if (!window.confirm("Clear all notifications?")) return;
+    const ok = await confirm({
+      title: "Clear all notifications?",
+      description: "This removes every notification from your inbox.",
+      confirmText: "Clear all",
+    });
+    if (!ok) return;
     for (const n of notifications) {
       await fetch(`/api/notifications/dismiss?notificationId=${n.id}`, { method: "DELETE" });
     }
     setNotifications([]);
+    toast.success("All notifications cleared");
   }
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;

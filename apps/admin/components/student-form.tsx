@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Label } from "@school-portal/ui";
+import { Button, Input, Label, useConfirm, toast } from "@school-portal/ui";
 
 interface Student {
   id: string;
@@ -21,6 +21,7 @@ interface StudentFormProps {
 
 export function StudentForm({ student, onClose }: StudentFormProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: student?.firstName ?? "",
@@ -51,23 +52,30 @@ export function StudentForm({ student, onClose }: StudentFormProps) {
     });
 
     if (res.ok) {
+      toast.success(isEdit ? "Student updated" : "Student added");
       router.refresh();
       onClose();
     } else {
-      const data = await res.json();
-      // silently fail - user can retry
+      toast.error("Failed to save student. Please try again.");
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!student || !window.confirm("Delete this student? This cannot be undone.")) return;
+    if (!student) return;
+    const ok = await confirm({
+      title: "Delete student?",
+      description: "This cannot be undone.",
+      confirmText: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/students?id=${student.id}`, { method: "DELETE" });
     if (res.ok) {
+      toast.success("Student deleted");
       router.refresh();
       onClose();
     } else {
-      // silently fail - user can retry
+      toast.error("Failed to delete student. Please try again.");
     }
   }
 

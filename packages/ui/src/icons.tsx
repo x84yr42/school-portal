@@ -127,6 +127,16 @@ export const ChevronRight = createIcon(
   "ChevronRight"
 );
 
+export const ChevronDown = createIcon(
+  <path d="M7.4 8.6L12 13.2l4.6-4.6L18 10l-6 6-6-6 1.4-1.4z" />,
+  "ChevronDown"
+);
+
+export const ChevronUp = createIcon(
+  <path d="M7.4 15.4L12 10.8l4.6 4.6L18 14l-6-6-6 6 1.4 1.4z" />,
+  "ChevronUp"
+);
+
 export const Plus = createIcon(
   <path d="M11 5v6H5v2h6v6h2v-6h6v-2h-6V5h-2z" />,
   "Plus"

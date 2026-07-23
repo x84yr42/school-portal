@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, Badge, Button, useConfirm, toast } from "@school-portal/ui";
 import { formatDate } from "@school-portal/shared";
 import { AnnouncementForm } from "@/components/announcement-form";
 import {
@@ -42,16 +42,25 @@ interface AnnouncementsClientProps {
 
 export function AnnouncementsClient({ announcements: initial, classes, workshops, userId }: AnnouncementsClientProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [announcements, setAnnouncements] = useState(initial);
   const [showForm, setShowForm] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   async function handleDelete(id: string) {
-    if (!window.confirm("Delete this announcement?")) return;
+    const ok = await confirm({
+      title: "Delete announcement?",
+      description: "This will permanently remove the announcement for all parents.",
+      confirmText: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/announcements?id=${id}`, { method: "DELETE" });
     if (res.ok) {
       setAnnouncements(announcements.filter((a) => a.id !== id));
+      toast.success("Announcement deleted");
       router.refresh();
+    } else {
+      toast.error("Failed to delete announcement");
     }
   }
 

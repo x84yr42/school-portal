@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle, ColorBlock } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, ColorBlock, Stagger, StaggerItem } from "@school-portal/ui";
 import { Bell, ChevronRight } from "@school-portal/ui";
 import { formatDate, daysUntil } from "@school-portal/shared";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
@@ -107,16 +107,20 @@ export default async function HomePage() {
       </div>
 
       {/* Stats — pastel blocks */}
-      <div className="grid grid-cols-2 gap-4">
-        <ColorBlock color="lime" className="p-5">
-          <p className="text-caption">LATEST NEWS</p>
-          <p className="text-card-title mt-1 tabular-nums">{announcements.length}</p>
-        </ColorBlock>
-        <ColorBlock color="pink" className="p-5">
-          <p className="text-caption">PENDING BILLS</p>
-          <p className="text-card-title mt-1 tabular-nums">{invoices.length}</p>
-        </ColorBlock>
-      </div>
+      <Stagger className="grid grid-cols-2 gap-4">
+        <StaggerItem>
+          <ColorBlock color="lime" className="p-5">
+            <p className="text-caption">LATEST NEWS</p>
+            <p className="text-card-title mt-1 tabular-nums">{announcements.length}</p>
+          </ColorBlock>
+        </StaggerItem>
+        <StaggerItem>
+          <ColorBlock color="pink" className="p-5">
+            <p className="text-caption">PENDING BILLS</p>
+            <p className="text-card-title mt-1 tabular-nums">{invoices.length}</p>
+          </ColorBlock>
+        </StaggerItem>
+      </Stagger>
 
       {/* Announcements preview */}
       <div>

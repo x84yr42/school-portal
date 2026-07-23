@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Input, Label } from "@school-portal/ui";
+import { Button, Input, Label, useConfirm, toast } from "@school-portal/ui";
 
 interface Teacher {
   id: string;
@@ -22,6 +22,7 @@ const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
 export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
   const router = useRouter();
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: teacher?.name ?? "",
@@ -48,23 +49,30 @@ export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
     });
 
     if (res.ok) {
+      toast.success(isEdit ? "Teacher updated" : "Teacher added");
       router.refresh();
       onClose();
     } else {
-      const data = await res.json();
-      // silently fail - user can retry
+      toast.error("Failed to save teacher. Please try again.");
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!teacher || !window.confirm("Delete this teacher?")) return;
+    if (!teacher) return;
+    const ok = await confirm({
+      title: "Delete teacher?",
+      description: "This will remove the teacher account.",
+      confirmText: "Delete",
+    });
+    if (!ok) return;
     const res = await fetch(`/api/teachers?id=${teacher.id}`, { method: "DELETE" });
     if (res.ok) {
+      toast.success("Teacher deleted");
       router.refresh();
       onClose();
     } else {
-      // silently fail - user can retry
+      toast.error("Failed to delete teacher. Please try again.");
     }
   }
 

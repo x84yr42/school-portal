@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle, ColorBlock, Eyebrow } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, ColorBlock, Eyebrow, Stagger, StaggerItem } from "@school-portal/ui";
 import { prisma } from "@school-portal/database";
 import {
   Users,
@@ -87,24 +87,26 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stat Cards — each in a pastel color block */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
+      <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
         {statCards.map((card) => {
           const Icon = card.icon;
           return (
-            <ColorBlock key={card.label} color={card.color} className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-caption mb-2">{card.label}</p>
-                  <p className="text-card-title tabular-nums">{card.value}</p>
+            <StaggerItem key={card.label}>
+              <ColorBlock color={card.color} className="p-6">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-caption mb-2">{card.label}</p>
+                    <p className="text-card-title tabular-nums">{card.value}</p>
+                  </div>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
+                    <Icon size={20} />
+                  </div>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
-                  <Icon size={20} />
-                </div>
-              </div>
-            </ColorBlock>
+              </ColorBlock>
+            </StaggerItem>
           );
         })}
-      </div>
+      </Stagger>
 
       {/* Activity Acknowledgements */}
       <div>
