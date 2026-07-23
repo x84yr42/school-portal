@@ -45,7 +45,7 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
 
   return (
     <div className="space-y-4 p-4 pb-24">
-      <Link href="/announcements" className="inline-flex items-center text-sm text-gray-600">
+      <Link href="/announcements" className="inline-flex items-center text-body-sm text-black/60">
         <ArrowLeft className="mr-1 h-4 w-4" />
         Back to announcements
       </Link>
@@ -53,15 +53,15 @@ export default async function AnnouncementDetailPage({ params }: PageProps) {
       <Card>
         <CardContent className="p-4">
           <div className="mb-3 flex items-start justify-between gap-2">
-            <h1 className="text-xl font-bold text-gray-900">{announcement.title}</h1>
+            <h1 className="text-headline text-black">{announcement.title}</h1>
             <Badge variant={announcement.priority === "EMERGENCY" ? "red" : "default"}>
               {announcement.priority}
             </Badge>
           </div>
-          <p className="mb-4 text-sm text-gray-500">
+          <p className="mb-4 text-caption text-black/50">
             {formatDate(announcement.createdAt)} · {announcement.author.name}
           </p>
-          <p className="whitespace-pre-wrap text-gray-700">{announcement.body}</p>
+          <p className="whitespace-pre-wrap text-black/70">{announcement.body}</p>
 
           {announcement.requiresAck && (
             <div className="mt-6">

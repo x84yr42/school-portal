@@ -115,14 +115,14 @@ export function StudentsClient({
   function SortHeader({ field, label }: { field: SortField; label: string }) {
     return (
       <th
-        className="cursor-pointer px-4 py-3 font-medium select-none hover:bg-gray-100"
+        className="cursor-pointer select-none px-4 py-3 font-[480] hover:bg-[#f7f7f5] transition-colors"
         onClick={() => toggleSort(field)}
       >
         <div className="flex items-center gap-1">
           {label}
-          <ArrowUpDown className="h-3 w-3 text-gray-400" />
+          <ArrowUpDown className="h-3 w-3 text-black/30" />
           {sortField === field && (
-            <span className="text-xs text-blue-600">{sortDir === "asc" ? "↑" : "↓"}</span>
+            <span className="text-caption text-black">{sortDir === "asc" ? "\u2191" : "\u2193"}</span>
           )}
         </div>
       </th>
@@ -132,7 +132,7 @@ export function StudentsClient({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Students</h2>
+        <h2 className="text-headline text-black">Students</h2>
         <div className="flex gap-2">
           <Link href="/students/import">
             <Button variant="outline">
@@ -150,7 +150,7 @@ export function StudentsClient({
       {/* Search bar with autocomplete */}
       <div className="relative">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/30" />
           <Input
             placeholder="Search students by name..."
             className="pl-10"
@@ -161,16 +161,16 @@ export function StudentsClient({
           />
         </div>
         {showSuggestions && (
-          <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className="absolute z-10 mt-1 w-full rounded-[8px] border border-[#e6e6e6] bg-white">
             {suggestions.map((s) => (
               <Link
                 key={s.id}
                 href={`/students/${s.id}`}
-                className="block px-4 py-2 text-sm hover:bg-gray-50"
+                className="block px-4 py-2 text-body-sm hover:bg-[#f7f7f5] transition-colors"
                 onMouseDown={() => { setSearch(""); setShowSuggestions(false); }}
               >
-                <span className="font-medium text-gray-900">{s.firstName} {s.lastName}</span>
-                <span className="ml-2 text-gray-500">
+                <span className="font-[480] text-black">{s.firstName} {s.lastName}</span>
+                <span className="ml-2 text-black/50">
                   {s.enrollments[0]?.class?.name ?? "No class"}
                 </span>
               </Link>
@@ -182,13 +182,13 @@ export function StudentsClient({
       {/* Filters and sorting */}
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-500" />
-          <span className="text-sm text-gray-600">Filter:</span>
+          <Filter className="h-4 w-4 text-black/50" />
+          <span className="text-body-sm text-black/60">Filter:</span>
         </div>
         <select
           value={filterClass}
           onChange={(e) => setFilterClass(e.target.value)}
-          className="rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
+          className="rounded-[8px] border border-[#e6e6e6] px-3 py-1.5 text-body-sm text-black focus:border-black focus:outline-none transition-colors"
         >
           <option value="">All Classes</option>
           {classes.map((c) => (
@@ -196,11 +196,11 @@ export function StudentsClient({
           ))}
         </select>
         <div className="ml-auto flex items-center gap-2">
-          <span className="text-sm text-gray-600">Sort by:</span>
+          <span className="text-body-sm text-black/60">Sort by:</span>
           <select
             value={sortField}
             onChange={(e) => setSortField(e.target.value as SortField)}
-            className="rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 focus:border-blue-500 focus:outline-none"
+            className="rounded-[8px] border border-[#e6e6e6] px-3 py-1.5 text-body-sm text-black focus:border-black focus:outline-none transition-colors"
           >
             <option value="lastName">Last Name</option>
             <option value="firstName">First Name</option>
@@ -210,7 +210,7 @@ export function StudentsClient({
           </select>
           <button
             onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
-            className="rounded-md border border-gray-200 px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+            className="rounded-[8px] border border-[#e6e6e6] px-2 py-1.5 text-body-sm text-black hover:bg-[#f7f7f5] transition-colors"
           >
             {sortDir === "asc" ? "↑ Ascending" : "↓ Descending"}
           </button>
@@ -221,15 +221,15 @@ export function StudentsClient({
         <CardHeader>
           <CardTitle>
             All Students
-            <span className="ml-2 text-sm font-normal text-gray-500">
+            <span className="ml-2 text-body-sm font-[320] text-black/50">
               ({filteredAndSorted.length} of {students.length})
             </span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-left text-gray-600">
+            <table className="w-full text-body-sm">
+              <thead className="text-left text-black/50">
                 <tr>
                   <SortHeader field="lastName" label="Name" />
                   <SortHeader field="class" label="Class" />
@@ -238,25 +238,25 @@ export function StudentsClient({
                   <th className="px-4 py-3 font-medium">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-[#f1f1f1]">
                 {filteredAndSorted.map((student) => (
-                  <tr key={student.id} className="hover:bg-gray-50">
+                  <tr key={student.id} className="hover:bg-[#f7f7f5] transition-colors">
                     <td className="px-4 py-3">
-                      <Link href={`/students/${student.id}`} className="font-medium text-blue-600 hover:underline">
+                      <Link href={`/students/${student.id}`} className="font-[480] text-black hover:underline underline-offset-4">
                         {student.firstName} {student.lastName}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 text-black/60">
                       {student.enrollments[0]?.class?.name ?? "N/A"}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">
+                    <td className="px-4 py-3 text-black/60">
                       {student.families.map((f) => f.user.name).join(", ") || "N/A"}
                     </td>
                     <td className="px-4 py-3 text-black">{student.allergies || "None"}</td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => handleEdit(student)}
-                        className="text-sm text-blue-600 hover:underline"
+                        className="text-body-sm text-black font-[480] hover:underline underline-offset-4"
                       >
                         Edit
                       </button>
@@ -267,7 +267,7 @@ export function StudentsClient({
             </table>
           </div>
           {filteredAndSorted.length === 0 && (
-            <p className="py-4 text-center text-gray-500">No students found.</p>
+            <p className="py-4 text-center text-body-sm text-black/50">No students found.</p>
           )}
         </CardContent>
       </Card>

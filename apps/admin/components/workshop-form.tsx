@@ -66,13 +66,11 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
   }
 
   async function handleDelete() {
-    if (!workshop || !confirm("Delete this workshop?")) return;
+    if (!workshop || !window.confirm("Delete this workshop?")) return;
     const res = await fetch(`/api/workshops?id=${workshop.id}`, { method: "DELETE" });
     if (res.ok) {
       router.refresh();
       onClose();
-    } else {
-      alert("Failed to delete workshop");
     }
   }
 
@@ -80,9 +78,9 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg max-h-[90vh] overflow-y-auto space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6"
       >
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-headline text-black">
           {workshop ? "Edit Workshop" : "Add Workshop"}
         </h3>
 
@@ -112,7 +110,7 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
           <Label htmlFor="teacherId">Assigned Teacher</Label>
           <select
             id="teacherId"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.teacherId}
             onChange={(e) => setFormData({ ...formData, teacherId: e.target.value })}
           >
@@ -128,7 +126,7 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
             <Label htmlFor="scheduleDay">Day</Label>
             <select
               id="scheduleDay"
-              className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+              className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
               value={formData.scheduleDay}
               onChange={(e) => setFormData({ ...formData, scheduleDay: e.target.value })}
             >
@@ -168,7 +166,7 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
             </Button>
           </div>
           {workshop && (
-            <Button type="button" variant="outline" onClick={handleDelete} className="text-red-600 hover:bg-red-50">
+            <Button type="button" variant="destructive" onClick={handleDelete}>
               Delete
             </Button>
           )}

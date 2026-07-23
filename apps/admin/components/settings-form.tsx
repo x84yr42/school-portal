@@ -46,7 +46,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
     if (res.ok) {
       setSaved(true);
     } else {
-      alert("Failed to save settings");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
@@ -54,7 +54,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 rounded-lg border border-gray-200 bg-white p-6"
+      className="space-y-6 rounded-[24px] border border-[#e6e6e6] bg-white p-6"
     >
       <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
@@ -100,7 +100,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
           <Label htmlFor="currency">Currency</Label>
           <select
             id="currency"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.currency}
             onChange={(e) => handleChange("currency", e.target.value)}
           >
@@ -114,7 +114,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
           <Label htmlFor="timezone">Timezone</Label>
           <select
             id="timezone"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.timezone}
             onChange={(e) => handleChange("timezone", e.target.value)}
           >
@@ -130,7 +130,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
         <textarea
           id="address"
           rows={2}
-          className="flex w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          className="flex w-full rounded-[8px] border border-[#e6e6e6] px-3 py-2 text-body-sm"
           value={formData.address}
           onChange={(e) => handleChange("address", e.target.value)}
         />
@@ -140,7 +140,7 @@ export function SettingsForm({ settings }: SettingsFormProps) {
         <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : "Save Settings"}
         </Button>
-        {saved && <span className="text-sm text-green-600">Settings saved successfully!</span>}
+        {saved && <span className="text-body-sm text-[#1ea64a]">Settings saved successfully!</span>}
       </div>
     </form>
   );

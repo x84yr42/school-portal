@@ -44,24 +44,24 @@ export default async function ArchivedAnnouncementsPage() {
     <div className="space-y-4 p-4 pb-24">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Archive className="h-5 w-5 text-gray-600" />
-          <h2 className="text-xl font-bold text-gray-900">Archived Announcements</h2>
+          <Archive className="h-5 w-5 text-black/60" />
+          <h2 className="text-headline text-black">Archived Announcements</h2>
         </div>
         <Link
           href="/announcements"
-          className="text-sm text-blue-600 hover:text-blue-800"
+          className="text-body-sm text-black hover:underline underline-offset-4"
         >
           Back to Announcements
         </Link>
       </div>
 
-      <p className="text-xs text-gray-500">Swipe left on an announcement to unarchive it.</p>
+      <p className="text-caption text-black/50">Swipe left on an announcement to unarchive it.</p>
 
       <AnnouncementsClient announcements={archivedAnnouncements} showArchived />
 
       {archivedAnnouncements.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-          <p className="text-gray-500">No archived announcements.</p>
+        <div className="rounded-[24px] border border-[#e6e6e6] bg-white p-8 text-center">
+          <p className="text-black/50">No archived announcements.</p>
         </div>
       )}
     </div>

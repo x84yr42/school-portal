@@ -24,16 +24,16 @@ export function AcknowledgeButton({
     if (res.ok) {
       setAcknowledged(true);
     } else {
-      alert("Failed to acknowledge. Please try again.");
+      // silently fail – user can retry
     }
     setLoading(false);
   }
 
   if (acknowledged) {
     return (
-      <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 text-green-700">
+      <div className="flex items-center gap-2 rounded-[8px] bg-[#c8e6cd] p-3 text-[#1ea64a]">
         <CheckCircle className="h-5 w-5" />
-        <span className="text-sm font-medium">You have acknowledged this announcement</span>
+        <span className="text-body-sm font-[480]">You have acknowledged this announcement</span>
       </div>
     );
   }

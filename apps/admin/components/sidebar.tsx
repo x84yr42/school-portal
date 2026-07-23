@@ -42,7 +42,7 @@ export function Sidebar() {
       <div className="flex h-full flex-col">
         {/* Logo */}
         <div className="flex h-14 items-center border-b border-[#e6e6e6] px-6">
-          <span className="text-display-lg text-black leading-none">Little Scholars</span>
+          <span className="text-headline text-black leading-none">Little Scholars</span>
         </div>
 
         {/* Navigation */}

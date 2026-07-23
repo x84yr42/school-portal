@@ -81,15 +81,15 @@ export function AnnouncementsClient({
         return (
           <div
             key={announcement.id}
-            className="relative overflow-hidden rounded-lg"
+            className="relative overflow-hidden rounded-[24px]"
             onTouchStart={(e) => handleTouchStart(e, announcement.id)}
             onTouchMove={handleTouchMove}
             onTouchEnd={() => handleTouchEnd(announcement.id)}
           >
             {/* Archive action background */}
-            <div className="absolute inset-0 flex items-center justify-end bg-gray-100 px-4">
-              <div className="flex items-center gap-2 text-gray-600">
-                <span className="text-sm">
+            <div className="absolute inset-0 flex items-center justify-end bg-[#f7f7f5] px-4">
+              <div className="flex items-center gap-2 text-black/60">
+                <span className="text-body-sm">
                   {showArchived ? "Unarchive" : "Archive"}
                 </span>
                 {showArchived ? (
@@ -103,7 +103,7 @@ export function AnnouncementsClient({
             {/* Card content */}
             <Link href={`/announcements/${announcement.id}`}>
               <Card
-                className={`transition-colors hover:bg-gray-50 transition-transform duration-200 ${
+                className={`transition-colors hover:bg-[#fafaf9] transition-transform duration-200 ${
                   isSwiped ? "-translate-x-20" : "translate-x-0"
                 }`}
               >
@@ -114,7 +114,7 @@ export function AnnouncementsClient({
                         {announcement.title}
                       </CardTitle>
                       {announcement.hasAcknowledged && (
-                        <CheckCircle className="h-4 w-4 shrink-0 text-green-500" />
+                        <CheckCircle className="h-4 w-4 shrink-0 text-[#1ea64a]" />
                       )}
                     </div>
                     <Badge
@@ -124,18 +124,18 @@ export function AnnouncementsClient({
                       {announcement.priority}
                     </Badge>
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-caption text-black/50">
                     {formatDate(announcement.createdAt)} · {announcement.author.name}
                   </p>
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
-                  <p className="line-clamp-2 text-sm text-gray-700">{announcement.body}</p>
+                  <p className="line-clamp-2 text-body-sm text-black/70">{announcement.body}</p>
                   {announcement.requiresAck && (
                     <span
-                      className={`mt-2 inline-block rounded-full px-2 py-0.5 text-xs ${
+                      className={`mt-2 inline-block rounded-full px-2 py-0.5 text-caption ${
                         announcement.hasAcknowledged
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
+                          ? "bg-[#c8e6cd] text-[#1ea64a]"
+                          : "bg-[#f4ecd6] text-black"
                       }`}
                     >
                       {announcement.hasAcknowledged ? "Acknowledged" : "Requires acknowledgment"}

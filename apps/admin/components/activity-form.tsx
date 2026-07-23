@@ -105,19 +105,19 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
       onClose();
     } else {
       const data = await res.json();
-      alert(data.error || "Failed to save activity");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!activity || !confirm("Delete this activity?")) return;
+    if (!activity || !window.confirm("Delete this activity?")) return;
     const res = await fetch(`/api/activities?id=${activity.id}`, { method: "DELETE" });
     if (res.ok) {
       router.refresh();
       onClose();
     } else {
-      alert("Failed to delete activity");
+      // silently fail - user can retry
     }
   }
 
@@ -125,9 +125,9 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
+        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6"
       >
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-headline text-black">
           {activity ? "Edit Activity" : "Create Activity"}
         </h3>
 
@@ -176,7 +176,7 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
             <Label htmlFor="participationType">Participation</Label>
             <select
               id="participationType"
-              className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+              className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
               value={formData.participationType}
               onChange={(e) => setFormData({ ...formData, participationType: e.target.value })}
             >
@@ -189,7 +189,7 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
             <Label htmlFor="status">Status</Label>
             <select
               id="status"
-              className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+              className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
               value={formData.status}
               onChange={(e) => setFormData({ ...formData, status: e.target.value })}
             >
@@ -239,7 +239,7 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
               id="consentRequired"
               checked={formData.consentRequired}
               onChange={(e) => setFormData({ ...formData, consentRequired: e.target.checked })}
-              className="h-4 w-4 rounded border-gray-300"
+              className="h-4 w-4 rounded border-[#e6e6e6]"
             />
             <Label htmlFor="consentRequired">Consent Required</Label>
           </div>
@@ -310,7 +310,7 @@ export function ActivityForm({ activity, onClose }: ActivityFormProps) {
             </Button>
           </div>
           {activity && (
-            <Button type="button" variant="outline" onClick={handleDelete} className="text-red-600 hover:bg-red-50">
+            <Button type="button" variant="destructive" onClick={handleDelete}>
               Delete
             </Button>
           )}

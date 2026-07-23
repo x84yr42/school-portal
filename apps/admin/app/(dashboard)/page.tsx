@@ -95,7 +95,7 @@ export default async function DashboardPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-caption mb-2">{card.label}</p>
-                  <p className="text-card-title">{card.value}</p>
+                  <p className="text-card-title tabular-nums">{card.value}</p>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/60">
                   <Icon className="h-5 w-5" strokeWidth={1.5} />
@@ -113,17 +113,17 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="rounded-[24px] bg-[#c8e6cd] p-6 text-center">
                 <CheckCircle className="mx-auto h-6 w-6 text-[#1ea64a]" strokeWidth={1.5} />
-                <p className="mt-3 text-card-title">{stats.approved}</p>
+                <p className="mt-3 text-card-title tabular-nums">{stats.approved}</p>
                 <p className="text-body-sm">Approved</p>
               </div>
               <div className="rounded-[24px] bg-[#efd4d4] p-6 text-center">
                 <XCircle className="mx-auto h-6 w-6" strokeWidth={1.5} />
-                <p className="mt-3 text-card-title">{stats.declined}</p>
+                <p className="mt-3 text-card-title tabular-nums">{stats.declined}</p>
                 <p className="text-body-sm">Declined</p>
               </div>
               <div className="rounded-[24px] bg-[#f7f7f5] p-6 text-center">
                 <Clock className="mx-auto h-6 w-6" strokeWidth={1.5} />
-                <p className="mt-3 text-card-title">
+                <p className="mt-3 text-card-title tabular-nums">
                   {stats.totalStudentsCount - stats.totalResponses}
                 </p>
                 <p className="text-body-sm">Pending</p>

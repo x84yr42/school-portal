@@ -105,12 +105,12 @@ export default function StudentImportPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/students" className="text-gray-400 hover:text-gray-600">
+        <Link href="/students" className="text-black/30 hover:text-black/60 transition-colors">
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Import Students</h2>
-          <p className="text-sm text-gray-500">Upload a CSV file to bulk import students with auto-generated link codes</p>
+          <h2 className="text-headline text-black">Import Students</h2>
+          <p className="text-body-sm text-black/50">Upload a CSV file to bulk import students with auto-generated link codes</p>
         </div>
       </div>
 
@@ -118,12 +118,12 @@ export default function StudentImportPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">1</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-caption text-white">1</span>
             Download Template
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="mb-3 text-sm text-gray-600">
+          <p className="mb-3 text-body-sm text-black/60">
             Download the CSV template, fill in student details, then upload it back.
           </p>
           <Button variant="outline" onClick={downloadTemplate}>
@@ -137,7 +137,7 @@ export default function StudentImportPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">2</span>
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black text-caption text-white">2</span>
             Upload CSV File
           </CardTitle>
         </CardHeader>
@@ -154,16 +154,16 @@ export default function StudentImportPage() {
             Choose CSV File
           </Button>
 
-          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+          {error && <p className="mt-3 text-body-sm text-[#ff3d8b]">{error}</p>}
 
           {parsedRows.length > 0 && (
             <div className="mt-4">
-              <p className="mb-2 text-sm font-medium text-gray-700">
+              <p className="mb-2 text-body-sm font-[480] text-black">
                 {parsedRows.length} student(s) ready to import:
               </p>
-              <div className="max-h-60 overflow-y-auto rounded-md border border-gray-200">
-                <table className="w-full text-sm">
-                  <thead className="bg-gray-50 text-left text-gray-600">
+              <div className="max-h-60 overflow-y-auto rounded-[8px] border border-[#e6e6e6]">
+                <table className="w-full text-body-sm">
+                  <thead className="text-left text-black/50">
                     <tr>
                       <th className="px-3 py-2 font-medium">First Name</th>
                       <th className="px-3 py-2 font-medium">Last Name</th>
@@ -171,7 +171,7 @@ export default function StudentImportPage() {
                       <th className="px-3 py-2 font-medium">Allergies</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100">
+                  <tbody className="divide-y divide-[#f1f1f1]">
                     {parsedRows.map((row, i) => (
                       <tr key={i}>
                         <td className="px-3 py-1">{row.firstName}</td>
@@ -198,12 +198,12 @@ export default function StudentImportPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-xs font-bold text-green-600">3</span>
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#c8e6cd] text-caption text-[#1ea64a]">3</span>
               Download Link Codes
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="mb-3 text-sm text-gray-600">
+            <p className="mb-3 text-body-sm text-black/60">
               {importedStudents.length} student(s) imported successfully. Each has been assigned a unique link code.
               Download the codes to distribute to parents.
             </p>
@@ -216,19 +216,19 @@ export default function StudentImportPage() {
                 Back to Students
               </Button>
             </div>
-            <div className="mt-4 max-h-60 overflow-y-auto rounded-md border border-gray-200">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-left text-gray-600">
+            <div className="mt-4 max-h-60 overflow-y-auto rounded-[8px] border border-[#e6e6e6]">
+              <table className="w-full text-body-sm">
+                <thead className="text-left text-black/50">
                   <tr>
                     <th className="px-3 py-2 font-medium">Name</th>
                     <th className="px-3 py-2 font-medium">Link Code</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#f1f1f1]">
                   {importedStudents.map((s) => (
                     <tr key={s.id}>
                       <td className="px-3 py-1">{s.firstName} {s.lastName}</td>
-                      <td className="px-3 py-1 font-mono font-bold">{s.code}</td>
+                      <td className="px-3 py-1 font-mono font-[700]">{s.code}</td>
                     </tr>
                   ))}
                 </tbody>

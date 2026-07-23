@@ -31,7 +31,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
 
   return (
     <div className="space-y-4 p-4 pb-24">
-      <Link href="/billing" className="inline-flex items-center text-sm text-gray-600">
+      <Link href="/billing" className="inline-flex items-center text-body-sm text-black/60">
         <ArrowLeft className="mr-1 h-4 w-4" />
         Back to billing
       </Link>
@@ -40,8 +40,8 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
         <CardContent className="p-4">
           <div className="mb-3 flex items-start justify-between gap-2">
             <div>
-              <h1 className="text-xl font-bold text-gray-900">{invoice.description}</h1>
-              <p className="text-sm text-gray-500">
+              <h1 className="text-headline text-black">{invoice.description}</h1>
+              <p className="text-body-sm text-black/50">
                 {invoice.student.firstName} {invoice.student.lastName} · {invoice.number}
               </p>
             </div>
@@ -54,65 +54,65 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
             </Badge>
           </div>
 
-          <div className="mb-4 rounded-md bg-gray-50 p-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Total Amount</span>
-              <span className="font-medium">{formatCurrency(Number(invoice.totalAmount))}</span>
+          <div className="mb-4 rounded-[8px] bg-[#f7f7f5] p-3">
+            <div className="flex items-center justify-between text-body-sm">
+              <span className="text-black/60">Total Amount</span>
+              <span className="font-[480] tabular-nums">{formatCurrency(Number(invoice.totalAmount))}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Amount Paid</span>
-              <span className="font-medium">{formatCurrency(Number(invoice.amountPaid))}</span>
+            <div className="flex items-center justify-between text-body-sm">
+              <span className="text-black/60">Amount Paid</span>
+              <span className="font-[480] tabular-nums">{formatCurrency(Number(invoice.amountPaid))}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Balance</span>
-              <span className="font-bold">{formatCurrency(balance)}</span>
+            <div className="flex items-center justify-between text-body-sm">
+              <span className="text-black/60">Balance</span>
+              <span className="font-[700] tabular-nums">{formatCurrency(balance)}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">Due Date</span>
-              <span className={isOverdue(invoice.dueDate) && invoice.status !== "PAID" ? "text-red-600" : ""}>
+            <div className="flex items-center justify-between text-body-sm">
+              <span className="text-black/60">Due Date</span>
+              <span className={isOverdue(invoice.dueDate) && invoice.status !== "PAID" ? "text-[#ff3d8b]" : ""}>
                 {formatDate(invoice.dueDate)}
               </span>
             </div>
           </div>
 
-          <h2 className="mb-2 font-semibold text-gray-900">Breakdown</h2>
+          <h2 className="mb-2 text-body-sm font-[540] text-black">Breakdown</h2>
           <div className="space-y-2">
             {lineItems.map((item, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between border-b border-gray-100 py-2 text-sm last:border-0"
+                className="flex items-center justify-between border-b border-[#f1f1f1] py-2 text-body-sm last:border-0"
               >
-                <span className="text-gray-700">{item.description}</span>
-                <span className="font-medium">{formatCurrency(item.amount)}</span>
+                <span className="text-black/70">{item.description}</span>
+                <span className="font-[480] tabular-nums">{formatCurrency(item.amount)}</span>
               </div>
             ))}
           </div>
 
           {invoice.status !== "PAID" && balance > 0 && (
-            <button className="mt-6 w-full rounded-md bg-blue-600 py-2 text-sm font-medium text-white">
+            <button className="mt-6 w-full rounded-[8px] bg-black py-2 text-body-sm font-[480] text-white transition-colors hover:bg-black/80">
               Upload Payment Proof
             </button>
           )}
 
           {invoice.payments.length > 0 && (
             <>
-              <h2 className="mb-2 mt-6 font-semibold text-gray-900">Payment History</h2>
+              <h2 className="mb-2 mt-6 text-body-sm font-[540] text-black">Payment History</h2>
               <div className="space-y-2">
                 {invoice.payments.map((payment) => (
                   <div
                     key={payment.id}
-                    className="flex items-center justify-between rounded-md bg-gray-50 p-2 text-sm"
+                    className="flex items-center justify-between rounded-[8px] bg-[#f7f7f5] p-2 text-body-sm"
                   >
                     <div>
-                      <p className="font-medium">{payment.method.replace("_", " ")}</p>
-                      <p className="text-xs text-gray-500">{formatDate(payment.recordedAt)}</p>
+                      <p className="font-[480]">{payment.method.replace("_", " ")}</p>
+                      <p className="text-caption">{formatDate(payment.recordedAt)}</p>
                       <span
-                        className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs ${
+                        className={`mt-1 inline-block rounded-full px-2 py-0.5 text-caption ${
                           payment.status === "CONFIRMED"
-                            ? "bg-green-100 text-green-800"
+                            ? "bg-[#c8e6cd] text-[#1ea64a]"
                             : payment.status === "REJECTED"
-                              ? "bg-red-100 text-red-800"
-                              : "bg-yellow-100 text-yellow-800"
+                              ? "bg-[#efd4d4] text-black"
+                              : "bg-[#f4ecd6] text-black"
                         }`}
                       >
                         {payment.status === "CONFIRMED"
@@ -122,7 +122,7 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
                             : "Pending Review"}
                       </span>
                     </div>
-                    <span className="font-medium">{formatCurrency(Number(payment.amount))}</span>
+                    <span className="font-[480] tabular-nums">{formatCurrency(Number(payment.amount))}</span>
                   </div>
                 ))}
               </div>

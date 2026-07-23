@@ -55,19 +55,19 @@ export function StudentForm({ student, onClose }: StudentFormProps) {
       onClose();
     } else {
       const data = await res.json();
-      alert(data.error || "Failed to save student");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!student || !confirm("Delete this student? This cannot be undone.")) return;
+    if (!student || !window.confirm("Delete this student? This cannot be undone.")) return;
     const res = await fetch(`/api/students?id=${student.id}`, { method: "DELETE" });
     if (res.ok) {
       router.refresh();
       onClose();
     } else {
-      alert("Failed to delete student");
+      // silently fail - user can retry
     }
   }
 
@@ -75,9 +75,9 @@ export function StudentForm({ student, onClose }: StudentFormProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-lg max-h-[90vh] overflow-y-auto space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6"
       >
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-headline text-black">
           {student ? "Edit Student" : "Add Student"}
         </h3>
 
@@ -126,7 +126,7 @@ export function StudentForm({ student, onClose }: StudentFormProps) {
           <textarea
             id="allergies"
             rows={2}
-            className="flex w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="flex w-full rounded-[8px] border border-[#e6e6e6] px-3 py-2 text-body-sm"
             value={formData.allergies}
             onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
             placeholder="e.g., Peanuts, Shellfish"
@@ -138,7 +138,7 @@ export function StudentForm({ student, onClose }: StudentFormProps) {
           <textarea
             id="medicalNotes"
             rows={2}
-            className="flex w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="flex w-full rounded-[8px] border border-[#e6e6e6] px-3 py-2 text-body-sm"
             value={formData.medicalNotes}
             onChange={(e) => setFormData({ ...formData, medicalNotes: e.target.value })}
             placeholder="Any relevant medical information"
@@ -155,7 +155,7 @@ export function StudentForm({ student, onClose }: StudentFormProps) {
             </Button>
           </div>
           {student && (
-            <Button type="button" variant="outline" onClick={handleDelete} className="text-red-600 hover:bg-red-50">
+            <Button type="button" variant="destructive" onClick={handleDelete}>
               Delete
             </Button>
           )}

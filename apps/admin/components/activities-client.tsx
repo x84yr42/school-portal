@@ -42,7 +42,7 @@ export function ActivitiesClient({ activities: initialActivities, totalStudents 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Activities & Consent</h2>
+        <h2 className="text-headline text-black">Activities & Consent</h2>
         <Button onClick={() => { setEditing(null); setShowForm(true); }}>
           <CalendarCheck className="mr-2 h-4 w-4" />
           Create Activity
@@ -73,41 +73,41 @@ export function ActivitiesClient({ activities: initialActivities, totalStudents 
                         {activity.status}
                       </Badge>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-caption text-black/50">
                       {activity.date && formatDate(activity.date)}
                       {activity.location && ` · ${activity.location}`}
                     </p>
                   </div>
                   <button
                     onClick={() => { setEditing(activity); setShowForm(true); }}
-                    className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+                    className="rounded p-1 text-black/40 hover:bg-[#f7f7f5] hover:text-black/60"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="line-clamp-2 text-gray-600">{activity.description}</p>
+                <p className="line-clamp-2 text-body-sm text-black/60">{activity.description}</p>
 
                 {/* Metrics */}
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
-                  <div className="flex items-center gap-1 text-gray-500">
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-body-sm">
+                  <div className="flex items-center gap-1 text-black/50">
                     <BarChart3 className="h-4 w-4" />
-                    <span>{total} response(s) ({totalStudents > 0 ? Math.round((total / totalStudents) * 100) : 0}%)</span>
+                    <span className="tabular-nums">{total} response(s) ({totalStudents > 0 ? Math.round((total / totalStudents) * 100) : 0}%)</span>
                   </div>
-                  <div className="flex items-center gap-1 text-green-600">
+                  <div className="flex items-center gap-1 text-[#1ea64a]">
                     <CheckCircle className="h-4 w-4" />
-                    <span>{approved} approved</span>
+                    <span className="tabular-nums">{approved} approved</span>
                   </div>
-                  <div className="flex items-center gap-1 text-red-600">
+                  <div className="flex items-center gap-1 text-[#ff3d8b]">
                     <XCircle className="h-4 w-4" />
-                    <span>{declined} declined</span>
+                    <span className="tabular-nums">{declined} declined</span>
                   </div>
                   {activity.cost && (
-                    <span className="text-gray-500">Cost: ₱{Number(activity.cost).toLocaleString()}</span>
+                    <span className="text-black/50 tabular-nums">Cost: ₱{Number(activity.cost).toLocaleString()}</span>
                   )}
                   {activity.deadline && (
-                    <span className="text-gray-500">Deadline: {formatDate(activity.deadline)}</span>
+                    <span className="text-black/50">Deadline: {formatDate(activity.deadline)}</span>
                   )}
                 </div>
 
@@ -116,21 +116,21 @@ export function ActivitiesClient({ activities: initialActivities, totalStudents 
                   <div className="mt-3">
                     <button
                       onClick={() => setExpandedId(isExpanded ? null : activity.id)}
-                      className="text-xs text-blue-600 hover:underline"
+                      className="text-caption text-black hover:underline"
                     >
                       {isExpanded ? "Hide details" : "View response details"}
                     </button>
                     {isExpanded && (
-                      <div className="mt-2 max-h-48 overflow-y-auto rounded-md border border-gray-100">
-                        <table className="w-full text-sm">
-                          <thead className="bg-gray-50 text-left text-gray-600">
+                      <div className="mt-2 max-h-48 overflow-y-auto rounded-[8px] border border-[#f1f1f1]">
+                        <table className="w-full text-body-sm">
+                          <thead className="bg-[#f7f7f5] text-left text-black/60">
                             <tr>
-                              <th className="px-3 py-2 font-medium">Student</th>
-                              <th className="px-3 py-2 font-medium">Parent</th>
-                              <th className="px-3 py-2 font-medium">Status</th>
+                              <th className="px-3 py-2 font-[480]">Student</th>
+                              <th className="px-3 py-2 font-[480]">Parent</th>
+                              <th className="px-3 py-2 font-[480]">Status</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-100">
+                          <tbody className="divide-y divide-[#f1f1f1]">
                             {activity.responses.map((r) => (
                               <tr key={r.id}>
                                 <td className="px-3 py-1">{r.student.firstName} {r.student.lastName}</td>
@@ -152,10 +152,10 @@ export function ActivitiesClient({ activities: initialActivities, totalStudents 
                 {/* Choices display */}
                 {activity.choices && activity.choices.length > 0 && (
                   <div className="mt-3">
-                    <p className="text-xs font-medium text-gray-500">Choices:</p>
+                    <p className="text-caption text-black/50">Choices:</p>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {activity.choices.map((c) => (
-                        <span key={c.id} className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
+                        <span key={c.id} className="rounded-full bg-[#f1f1f1] px-2 py-0.5 text-caption text-black/60">
                           {c.label}
                         </span>
                       ))}
@@ -169,8 +169,8 @@ export function ActivitiesClient({ activities: initialActivities, totalStudents 
       </div>
 
       {activities.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-          <p className="text-gray-500">No activities created yet.</p>
+        <div className="rounded-[24px] border border-[#e6e6e6] bg-white p-8 text-center">
+          <p className="text-black/50">No activities created yet.</p>
         </div>
       )}
 

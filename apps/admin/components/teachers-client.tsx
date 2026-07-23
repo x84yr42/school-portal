@@ -28,7 +28,7 @@ export function TeachersClient({ teachers: initialTeachers }: { teachers: Teache
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Teachers</h2>
+        <h2 className="text-headline text-black">Teachers</h2>
         <Button onClick={() => { setEditing(null); setShowForm(true); }}>
           <UserPlus className="mr-2 h-4 w-4" />
           Add Teacher
@@ -40,31 +40,31 @@ export function TeachersClient({ teachers: initialTeachers }: { teachers: Teache
           <Card key={teacher.id} className="relative">
             <button
               onClick={() => handleEdit(teacher)}
-              className="absolute right-3 top-3 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              className="absolute right-3 top-3 rounded p-1 text-black/40 hover:bg-[#f7f7f5] hover:text-black/60"
             >
               <Pencil className="h-4 w-4" />
             </button>
             <CardHeader>
               <CardTitle className="text-lg pr-8">{teacher.name}</CardTitle>
-              <p className="text-sm text-gray-500">{teacher.email}</p>
-              {teacher.phone && <p className="text-xs text-gray-400">{teacher.phone}</p>}
+              <p className="text-body-sm text-black/50">{teacher.email}</p>
+              {teacher.phone && <p className="text-caption text-black/40">{teacher.phone}</p>}
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 {teacher.teacherClasses.length > 0 && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-body-sm text-black/60">
                     <GraduationCap className="h-4 w-4" />
                     <span>{teacher.teacherClasses.length} class(es): {teacher.teacherClasses.map((c) => c.name).join(", ")}</span>
                   </div>
                 )}
                 {teacher.teacherWorkshops.length > 0 && (
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-body-sm text-black/60">
                     <Palette className="h-4 w-4" />
                     <span>{teacher.teacherWorkshops.length} workshop(s): {teacher.teacherWorkshops.map((w) => w.name).join(", ")}</span>
                   </div>
                 )}
                 {teacher.teacherClasses.length === 0 && teacher.teacherWorkshops.length === 0 && (
-                  <p className="text-sm text-gray-400">No assignments yet</p>
+                  <p className="text-body-sm text-black/40">No assignments yet</p>
                 )}
               </div>
             </CardContent>
@@ -73,8 +73,8 @@ export function TeachersClient({ teachers: initialTeachers }: { teachers: Teache
       </div>
 
       {teachers.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-          <p className="text-gray-500">No teachers added yet. Click &quot;Add Teacher&quot; to get started.</p>
+        <div className="rounded-[24px] border border-[#e6e6e6] bg-white p-8 text-center">
+          <p className="text-black/50">No teachers added yet. Click &quot;Add Teacher&quot; to get started.</p>
         </div>
       )}
 

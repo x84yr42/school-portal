@@ -53,7 +53,7 @@ export default async function BillingPage() {
       <ColorBlock color="cream" className="flex items-center justify-between">
         <div>
           <p className="text-caption mb-2">TOTAL OUTSTANDING</p>
-          <p className="text-card-title">{formatCurrency(totalOutstanding)}</p>
+          <p className="text-card-title tabular-nums">{formatCurrency(totalOutstanding)}</p>
         </div>
         <p className="text-body-sm">
           {invoices.filter((i) => i.status !== "PAID").length} unpaid invoices
@@ -90,7 +90,7 @@ export default async function BillingPage() {
                       {invoice.student.firstName} {invoice.student.lastName}
                     </td>
                     <td className="px-4 py-3">{invoice.description}</td>
-                    <td className="px-4 py-3 font-[480]">
+                    <td className="px-4 py-3 font-[480] tabular-nums">
                       {formatCurrency(Number(invoice.totalAmount))}
                     </td>
                     <td className="px-4 py-3">

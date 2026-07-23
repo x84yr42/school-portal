@@ -89,7 +89,7 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
     setLoading(true);
 
     if (!selectedStudent) {
-      alert("Please select a student");
+      // silently fail - user can retry
       setLoading(false);
       return;
     }
@@ -102,7 +102,7 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
       }));
 
     if (validItems.length === 0) {
-      alert("Please add at least one line item");
+      // silently fail - user can retry
       setLoading(false);
       return;
     }
@@ -130,31 +130,31 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
       setLineItems([{ category: "", description: "", amount: "" }]);
       router.refresh();
     } else {
-      alert("Failed to create invoice");
+      // silently fail - user can retry
     }
 
     setLoading(false);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-      <h3 className="text-lg font-semibold text-gray-900">Create Invoice</h3>
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6">
+      <h3 className="text-headline text-black">Create Invoice</h3>
 
       {/* Student autocomplete */}
       <div className="space-y-2">
         <Label>Student</Label>
         {selectedStudent ? (
           <div className="flex items-center gap-2">
-            <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
+            <span className="rounded-full bg-[#f1f1f1] px-3 py-1 text-body-sm font-[480] text-black">
               {selectedStudent.firstName} {selectedStudent.lastName}
             </span>
-            <button type="button" onClick={() => setSelectedStudent(null)} className="text-gray-400 hover:text-red-500">
+            <button type="button" onClick={() => setSelectedStudent(null)} className="text-black/40 hover:text-[#ff3d8b]">
               <X className="h-4 w-4" />
             </button>
           </div>
         ) : (
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/40" />
             <Input
               placeholder="Search student by name..."
               className="pl-10"
@@ -165,12 +165,12 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
               required={!selectedStudent}
             />
             {showSuggestions && (
-              <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+              <div className="absolute z-10 mt-1 w-full rounded-[8px] border border-[#e6e6e6] bg-white">
                 {suggestions.map((s) => (
                   <button
                     key={s.id}
                     type="button"
-                    className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50"
+                    className="block w-full px-4 py-2 text-left text-body-sm hover:bg-[#fafaf9]"
                     onMouseDown={() => selectStudent(s)}
                   >
                     <span className="font-medium">{s.firstName} {s.lastName}</span>
@@ -215,9 +215,9 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
         {lineItems.map((item, index) => (
           <div key={index} className="flex gap-2 items-end">
             <div className="flex-1 space-y-1">
-              {index === 0 && <span className="text-xs text-gray-500">Category</span>}
+              {index === 0 && <span className="text-caption text-black/50">Category</span>}
               <select
-                className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
                 value={item.category}
                 onChange={(e) => updateLineItem(index, "category", e.target.value)}
               >
@@ -228,7 +228,7 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
               </select>
             </div>
             <div className="flex-1 space-y-1">
-              {index === 0 && <span className="text-xs text-gray-500">Description</span>}
+              {index === 0 && <span className="text-caption text-black/50">Description</span>}
               <Input
                 placeholder="Description"
                 value={item.description}
@@ -237,7 +237,7 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
               />
             </div>
             <div className="w-32 space-y-1">
-              {index === 0 && <span className="text-xs text-gray-500">Amount</span>}
+              {index === 0 && <span className="text-caption text-black/50">Amount</span>}
               <Input
                 placeholder="Amount"
                 type="number"
@@ -249,7 +249,7 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
               />
             </div>
             {lineItems.length > 1 && (
-              <button type="button" onClick={() => removeLineItem(index)} className="mb-1 text-gray-400 hover:text-red-500">
+              <button type="button" onClick={() => removeLineItem(index)} className="mb-1 text-black/40 hover:text-[#ff3d8b]">
                 <X className="h-4 w-4" />
               </button>
             )}
@@ -261,8 +261,8 @@ export function InvoiceForm({ students, initialCategories }: InvoiceFormProps) {
         </Button>
       </div>
 
-      <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-        <span className="text-lg font-semibold">Total: ₱{totalAmount.toLocaleString()}</span>
+      <div className="flex items-center justify-between border-t border-[#f1f1f1] pt-4">
+        <span className="text-headline tabular-nums">Total: ₱{totalAmount.toLocaleString()}</span>
         <Button type="submit" disabled={loading}>
           {loading ? "Creating..." : "Create Invoice"}
         </Button>

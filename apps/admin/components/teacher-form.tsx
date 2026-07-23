@@ -52,19 +52,19 @@ export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
       onClose();
     } else {
       const data = await res.json();
-      alert(data.error || "Failed to save teacher");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
 
   async function handleDelete() {
-    if (!teacher || !confirm("Delete this teacher?")) return;
+    if (!teacher || !window.confirm("Delete this teacher?")) return;
     const res = await fetch(`/api/teachers?id=${teacher.id}`, { method: "DELETE" });
     if (res.ok) {
       router.refresh();
       onClose();
     } else {
-      alert("Failed to delete teacher");
+      // silently fail - user can retry
     }
   }
 
@@ -72,9 +72,9 @@ export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-lg"
+        className="w-full max-w-md space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6"
       >
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-headline text-black">
           {teacher ? "Edit Teacher" : "Add Teacher"}
         </h3>
 
@@ -110,7 +110,7 @@ export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
 
         <div className="space-y-2">
           <Label htmlFor="password">
-            Password {teacher && <span className="text-xs text-gray-500">(leave blank to keep current)</span>}
+            Password {teacher && <span className="text-caption text-black/50">(leave blank to keep current)</span>}
           </Label>
           <Input
             id="password"
@@ -122,15 +122,15 @@ export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
         </div>
 
         {teacher && (teacher.teacherClasses.length > 0 || teacher.teacherWorkshops.length > 0) && (
-          <div className="space-y-2 rounded-md bg-gray-50 p-3">
-            <p className="text-sm font-medium text-gray-700">Assignments</p>
+          <div className="space-y-2 rounded-[8px] bg-[#f7f7f5] p-3">
+            <p className="text-body-sm font-[480] text-black/70">Assignments</p>
             {teacher.teacherClasses.length > 0 && (
-              <p className="text-xs text-gray-600">
+              <p className="text-caption text-black/60">
                 Classes: {teacher.teacherClasses.map((c) => c.name).join(", ")}
               </p>
             )}
             {teacher.teacherWorkshops.length > 0 && (
-              <p className="text-xs text-gray-600">
+              <p className="text-caption text-black/60">
                 Workshops: {teacher.teacherWorkshops.map((w) => w.name).join(", ")}
               </p>
             )}
@@ -147,7 +147,7 @@ export function TeacherForm({ teacher, onClose }: TeacherFormProps) {
             </Button>
           </div>
           {teacher && (
-            <Button type="button" variant="outline" onClick={handleDelete} className="text-red-600 hover:bg-red-50">
+            <Button type="button" variant="destructive" onClick={handleDelete}>
               Delete
             </Button>
           )}

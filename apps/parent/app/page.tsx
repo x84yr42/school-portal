@@ -110,11 +110,11 @@ export default async function HomePage() {
       <div className="grid grid-cols-2 gap-4">
         <ColorBlock color="lime" className="p-5">
           <p className="text-caption">LATEST NEWS</p>
-          <p className="text-card-title mt-1">{announcements.length}</p>
+          <p className="text-card-title mt-1 tabular-nums">{announcements.length}</p>
         </ColorBlock>
         <ColorBlock color="pink" className="p-5">
           <p className="text-caption">PENDING BILLS</p>
-          <p className="text-card-title mt-1">{invoices.length}</p>
+          <p className="text-card-title mt-1 tabular-nums">{invoices.length}</p>
         </ColorBlock>
       </div>
 

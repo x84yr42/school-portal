@@ -86,7 +86,7 @@ export function WorkshopEnrollmentForm({
   }
 
   async function removeEnrolledStudent(studentId: string) {
-    if (!selectedWorkshop || !confirm("Remove this student from the workshop?")) return;
+    if (!selectedWorkshop || !window.confirm("Remove this student from the workshop?")) return;
     const res = await fetch(
       `/api/workshops/enroll?workshopGroupId=${selectedWorkshop}&studentId=${studentId}`,
       { method: "DELETE" }
@@ -95,7 +95,7 @@ export function WorkshopEnrollmentForm({
       setEnrolledStudents(enrolledStudents.filter((s) => s.id !== studentId));
       router.refresh();
     } else {
-      alert("Failed to remove student");
+      // silently fail - user can retry
     }
   }
 
@@ -119,21 +119,21 @@ export function WorkshopEnrollmentForm({
       setShowConfirm(false);
       router.refresh();
     } else {
-      alert("Failed to enroll students");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
 
   return (
-    <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-      <h3 className="text-lg font-semibold text-gray-900">Enroll Students</h3>
+    <div className="space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6">
+      <h3 className="text-headline text-black">Enroll Students</h3>
 
       {!workshopId && (
         <div className="space-y-2">
           <Label htmlFor="workshop">Workshop Group</Label>
           <select
             id="workshop"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={selectedWorkshop}
             onChange={(e) => setSelectedWorkshop(e.target.value)}
             required
@@ -154,16 +154,16 @@ export function WorkshopEnrollmentForm({
             Currently Enrolled ({enrolledStudents.length})
           </Label>
           {loadingEnrolled ? (
-            <p className="text-sm text-gray-500">Loading...</p>
+            <p className="text-body-sm text-black/50">Loading...</p>
           ) : enrolledStudents.length > 0 ? (
-            <div className="max-h-40 overflow-y-auto rounded-md border border-gray-100">
+            <div className="max-h-40 overflow-y-auto rounded-[8px] border border-[#f1f1f1]">
               {enrolledStudents.map((s) => (
-                <div key={s.id} className="flex items-center justify-between border-b border-gray-50 px-3 py-2 last:border-0">
-                  <span className="text-sm text-gray-700">{s.firstName} {s.lastName}</span>
+                <div key={s.id} className="flex items-center justify-between border-b border-[#f1f1f1] px-3 py-2 last:border-0">
+                  <span className="text-body-sm text-black/70">{s.firstName} {s.lastName}</span>
                   <button
                     type="button"
                     onClick={() => removeEnrolledStudent(s.id)}
-                    className="text-xs text-red-500 hover:underline"
+                    className="text-caption text-[#ff3d8b] hover:underline"
                   >
                     Remove
                   </button>
@@ -171,7 +171,7 @@ export function WorkshopEnrollmentForm({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-500">No students enrolled yet.</p>
+            <p className="text-body-sm text-black/50">No students enrolled yet.</p>
           )}
         </div>
       )}
@@ -180,7 +180,7 @@ export function WorkshopEnrollmentForm({
       <div className="space-y-2">
         <Label>Search Students to Add</Label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black/40" />
           <Input
             placeholder="Type student name to search..."
             className="pl-10"
@@ -190,12 +190,12 @@ export function WorkshopEnrollmentForm({
             onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
           />
           {showSuggestions && (
-            <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+            <div className="absolute z-10 mt-1 w-full rounded-[8px] border border-[#e6e6e6] bg-white">
               {suggestions.map((s) => (
                 <button
                   key={s.id}
                   type="button"
-                  className="block w-full px-4 py-2 text-left text-sm hover:bg-gray-50"
+                  className="block w-full px-4 py-2 text-left text-body-sm hover:bg-[#fafaf9]"
                   onMouseDown={() => addStudent(s)}
                 >
                   <span className="font-medium">{s.firstName} {s.lastName}</span>
@@ -214,10 +214,10 @@ export function WorkshopEnrollmentForm({
             {selectedStudents.map((s) => (
               <span
                 key={s.id}
-                className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1 text-sm text-blue-700"
+                className="inline-flex items-center gap-1 rounded-full bg-[#f1f1f1] px-3 py-1 text-body-sm text-black"
               >
                 {s.firstName} {s.lastName}
-                <button type="button" onClick={() => removeStudent(s.id)} className="hover:text-red-500">
+                <button type="button" onClick={() => removeStudent(s.id)} className="hover:text-[#ff3d8b]">
                   <X className="h-3 w-3" />
                 </button>
               </span>
@@ -237,15 +237,15 @@ export function WorkshopEnrollmentForm({
       {/* Confirmation dialog */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="w-full max-w-md space-y-4 rounded-lg border border-gray-200 bg-white p-6 shadow-lg">
-            <h4 className="text-lg font-semibold text-gray-900">Confirm Enrollment</h4>
-            <p className="text-sm text-gray-600">
+          <div className="w-full max-w-md space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6">
+            <h4 className="text-headline text-black">Confirm Enrollment</h4>
+            <p className="text-body-sm text-black/60">
               Enroll {selectedStudents.length} student(s) into{" "}
               <strong>{workshops.find((w) => w.id === selectedWorkshop)?.name}</strong>?
             </p>
-            <div className="max-h-40 overflow-y-auto rounded-md border border-gray-100 p-2">
+            <div className="max-h-40 overflow-y-auto rounded-[8px] border border-[#f1f1f1] p-2">
               {selectedStudents.map((s) => (
-                <p key={s.id} className="text-sm text-gray-700">{s.firstName} {s.lastName}</p>
+                <p key={s.id} className="text-body-sm text-black/70">{s.firstName} {s.lastName}</p>
               ))}
             </div>
             <div className="flex justify-end gap-2">

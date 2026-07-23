@@ -34,12 +34,12 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Link href="/workshops" className="text-gray-400 hover:text-gray-600">
+        <Link href="/workshops" className="text-black/30 hover:text-black/60 transition-colors">
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{workshop.name}</h2>
-          <p className="text-sm text-gray-500">{workshop.description || "No description"}</p>
+          <h2 className="text-headline text-black">{workshop.name}</h2>
+          <p className="text-body-sm text-black/50">{workshop.description || "No description"}</p>
         </div>
       </div>
 
@@ -51,26 +51,26 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm font-medium text-gray-500">Status</p>
+              <p className="text-caption">Status</p>
               <Badge variant={workshop.isActive ? "green" : "gray"}>
                 {workshop.isActive ? "Active" : "Inactive"}
               </Badge>
             </div>
             {workshop.teacher && (
               <div>
-                <p className="text-sm font-medium text-gray-500">Teacher</p>
-                <p className="text-gray-900">{workshop.teacher.name}</p>
+                <p className="text-caption">Teacher</p>
+                <p className="text-black">{workshop.teacher.name}</p>
               </div>
             )}
             {workshop.scheduleDay != null && (
               <div>
-                <p className="text-sm font-medium text-gray-500">Schedule</p>
-                <div className="flex items-center gap-2 text-gray-900">
-                  <Calendar className="h-4 w-4 text-gray-400" />
+                <p className="text-caption">Schedule</p>
+                <div className="flex items-center gap-2 text-black">
+                  <Calendar className="h-4 w-4 text-black/30" />
                   <span>{DAYS[workshop.scheduleDay]}</span>
                   {workshop.scheduleStartTime && (
                     <>
-                      <Clock className="h-4 w-4 text-gray-400" />
+                      <Clock className="h-4 w-4 text-black/30" />
                       <span>{workshop.scheduleStartTime} - {workshop.scheduleEndTime}</span>
                     </>
                   )}
@@ -78,8 +78,8 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
               </div>
             )}
             <div>
-              <p className="text-sm font-medium text-gray-500">Enrolled Students</p>
-              <p className="text-gray-900">{workshop.enrollments.length}</p>
+              <p className="text-caption">Enrolled Students</p>
+              <p className="text-black tabular-nums">{workshop.enrollments.length}</p>
             </div>
           </div>
         </CardContent>
@@ -96,8 +96,8 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
         <CardContent>
           {workshop.enrollments.length > 0 ? (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-left text-gray-600">
+              <table className="w-full text-body-sm">
+                <thead className="text-left text-black/50">
                   <tr>
                     <th className="px-4 py-3 font-medium">Name</th>
                     <th className="px-4 py-3 font-medium">Class</th>
@@ -105,21 +105,21 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
                     <th className="px-4 py-3 font-medium">Enrolled Since</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-[#f1f1f1]">
                   {workshop.enrollments.map((e) => (
-                    <tr key={e.id} className="hover:bg-gray-50">
+                    <tr key={e.id} className="hover:bg-[#f7f7f5] transition-colors">
                       <td className="px-4 py-3">
-                        <Link href={`/students/${e.student.id}`} className="font-medium text-blue-600 hover:underline">
+                        <Link href={`/students/${e.student.id}`} className="font-[480] text-black hover:underline underline-offset-4">
                           {e.student.firstName} {e.student.lastName}
                         </Link>
                       </td>
-                      <td className="px-4 py-3 text-gray-600">
+                      <td className="px-4 py-3 text-black/60">
                         {e.student.enrollments[0]?.class?.name ?? "N/A"}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">
+                      <td className="px-4 py-3 text-black/60">
                         {e.student.families.map((f) => f.user.name).join(", ") || "N/A"}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">
+                      <td className="px-4 py-3 text-black/60">
                         {formatDate(e.startDate)}
                       </td>
                     </tr>
@@ -128,7 +128,7 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
               </table>
             </div>
           ) : (
-            <p className="text-gray-500">No students enrolled yet.</p>
+            <p className="text-body-sm text-black/50">No students enrolled yet.</p>
           )}
         </CardContent>
       </Card>

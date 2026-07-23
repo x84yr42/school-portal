@@ -38,7 +38,7 @@ export function WorkshopsClient({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Workshop Groups</h2>
+        <h2 className="text-headline text-black">Workshop Groups</h2>
         <Button onClick={() => { setEditing(null); setShowForm(true); }}>
           <Plus className="mr-2 h-4 w-4" />
           Add Workshop
@@ -57,7 +57,7 @@ export function WorkshopsClient({
           <Card key={workshop.id} className="relative">
             <button
               onClick={() => { setEditing(workshop); setShowForm(true); }}
-              className="absolute right-3 top-3 rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              className="absolute right-3 top-3 rounded p-1 text-black/40 hover:bg-[#f7f7f5] hover:text-black/60"
             >
               <Pencil className="h-4 w-4" />
             </button>
@@ -67,15 +67,15 @@ export function WorkshopsClient({
                   {workshop.name}
                 </Link>
               </CardTitle>
-              <p className="text-sm text-gray-500">{workshop.description || "No description"}</p>
+              <p className="text-body-sm text-black/50">{workshop.description || "No description"}</p>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
                 {workshop.teacher && (
-                  <p className="text-sm text-gray-600">Teacher: {workshop.teacher.name}</p>
+                  <p className="text-body-sm text-black/60">Teacher: {workshop.teacher.name}</p>
                 )}
                 {workshop.scheduleDay != null && (
-                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                  <div className="flex items-center gap-1 text-body-sm text-black/60">
                     <Calendar className="h-3 w-3" />
                     <span>
                       {DAYS[workshop.scheduleDay]}
@@ -84,7 +84,7 @@ export function WorkshopsClient({
                     </span>
                   </div>
                 )}
-                <div className="flex items-center gap-1 text-sm text-gray-600">
+                <div className="flex items-center gap-1 text-body-sm text-black/60">
                   <Users className="h-4 w-4" />
                   <span>{workshop.enrollments.length} students</span>
                 </div>
@@ -94,14 +94,14 @@ export function WorkshopsClient({
                   <div>
                     <button
                       onClick={() => setExpandedId(expandedId === workshop.id ? null : workshop.id)}
-                      className="text-xs text-blue-600 hover:underline"
+                      className="text-caption text-black hover:underline"
                     >
                       {expandedId === workshop.id ? "Hide students" : "View students"}
                     </button>
                     {expandedId === workshop.id && (
                       <div className="mt-2 space-y-1">
                         {workshop.enrollments.map((e) => (
-                          <p key={e.student.id} className="text-xs text-gray-500">
+                          <p key={e.student.id} className="text-caption text-black/50">
                             {e.student.firstName} {e.student.lastName}
                           </p>
                         ))}
@@ -116,8 +116,8 @@ export function WorkshopsClient({
       </div>
 
       {workshops.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">
-          <p className="text-gray-500">No workshops created yet.</p>
+        <div className="rounded-[24px] border border-[#e6e6e6] bg-white p-8 text-center">
+          <p className="text-black/50">No workshops created yet.</p>
         </div>
       )}
 

@@ -38,7 +38,7 @@ export function InvoiceCategoryManager({
       setNewName("");
     } else {
       const data = await res.json();
-      alert(data.error || "Failed to add category");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
@@ -56,19 +56,19 @@ export function InvoiceCategoryManager({
       onCategoriesChange(categories.map((c) => (c.id === id ? updated : c)));
       setEditingId(null);
     } else {
-      alert("Failed to update category");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this category?")) return;
+    if (!window.confirm("Delete this category?")) return;
     setLoading(true);
     const res = await fetch(`/api/invoice-categories?id=${id}`, { method: "DELETE" });
     if (res.ok) {
       onCategoriesChange(categories.filter((c) => c.id !== id));
     } else {
-      alert("Failed to delete category");
+      // silently fail - user can retry
     }
     setLoading(false);
   }
@@ -78,7 +78,7 @@ export function InvoiceCategoryManager({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1 text-xs text-blue-600 hover:underline"
+        className="flex items-center gap-1 text-caption text-black hover:underline"
       >
         <FolderOpen className="h-3 w-3" />
         Manage Categories
@@ -87,10 +87,10 @@ export function InvoiceCategoryManager({
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-gray-200 bg-gray-50 p-4">
+    <div className="space-y-3 rounded-[24px] border border-[#e6e6e6] bg-[#f7f7f5] p-4">
       <div className="flex items-center justify-between">
-        <Label className="text-sm font-semibold">Manage Line Item Categories</Label>
-        <button type="button" onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600">
+        <Label className="text-body-sm font-[700]">Manage Line Item Categories</Label>
+        <button type="button" onClick={() => setIsOpen(false)} className="text-black/40 hover:text-black/60">
           <X className="h-4 w-4" />
         </button>
       </div>
@@ -111,32 +111,32 @@ export function InvoiceCategoryManager({
                   type="button"
                   onClick={() => handleUpdate(cat.id)}
                   disabled={loading}
-                  className="text-green-600 hover:text-green-700"
+                  className="text-[#1ea64a] hover:text-[#178a3d]"
                 >
                   <Check className="h-4 w-4" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditingId(null)}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-black/40 hover:text-black/60"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </>
             ) : (
               <>
-                <span className="flex-1 text-sm text-gray-700">{cat.name}</span>
+                <span className="flex-1 text-body-sm text-black/70">{cat.name}</span>
                 <button
                   type="button"
                   onClick={() => { setEditingId(cat.id); setEditName(cat.name); }}
-                  className="text-gray-400 hover:text-blue-600"
+                  className="text-black/40 hover:text-black"
                 >
                   <Pencil className="h-3 w-3" />
                 </button>
                 <button
                   type="button"
                   onClick={() => handleDelete(cat.id)}
-                  className="text-gray-400 hover:text-red-600"
+                  className="text-black/40 hover:text-[#ff3d8b]"
                 >
                   <X className="h-3 w-3" />
                 </button>

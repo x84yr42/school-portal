@@ -34,7 +34,7 @@ export default async function BillingPage() {
           <h2 className="text-display-lg text-black leading-none mt-2">Invoices</h2>
           <div className="mt-4">
             <p className="text-caption">TOTAL OUTSTANDING</p>
-            <p className="text-card-title">{formatCurrency(totalOutstanding)}</p>
+            <p className="text-card-title tabular-nums">{formatCurrency(totalOutstanding)}</p>
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@ export default async function BillingPage() {
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <div className="flex items-center justify-between">
-                    <span className="text-body-lg font-[480]">{formatCurrency(Number(invoice.totalAmount))}</span>
+                    <span className="text-body-lg font-[480] tabular-nums">{formatCurrency(Number(invoice.totalAmount))}</span>
                     <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
                   </div>
                   <p className="text-caption mt-1">Due {formatDate(invoice.dueDate)}</p>

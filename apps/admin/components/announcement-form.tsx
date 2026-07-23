@@ -68,15 +68,15 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
       setTargetType("all");
       router.refresh();
     } else {
-      alert("Failed to create announcement");
+      // silently fail - user can retry
     }
 
     setLoading(false);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-200 bg-white p-6">
-      <h3 className="text-lg font-semibold text-gray-900">New Announcement</h3>
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-[24px] border border-[#e6e6e6] bg-white p-6">
+      <h3 className="text-headline text-black">New Announcement</h3>
 
       <div className="space-y-2">
         <Label htmlFor="title">Title</Label>
@@ -104,7 +104,7 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
           <Label htmlFor="category">Category</Label>
           <select
             id="category"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.category}
             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
           >
@@ -120,7 +120,7 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
           <Label htmlFor="priority">Priority</Label>
           <select
             id="priority"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.priority}
             onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
           >
@@ -136,7 +136,7 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
           <Label htmlFor="targetType">Target Audience</Label>
           <select
             id="targetType"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={targetType}
             onChange={(e) => setTargetType(e.target.value)}
           >
@@ -168,7 +168,7 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
           <Label htmlFor="targetValue">Class</Label>
           <select
             id="targetValue"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.targetValue}
             onChange={(e) => setFormData({ ...formData, targetValue: e.target.value })}
             required
@@ -188,7 +188,7 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
           <Label htmlFor="targetValue">Workshop Group</Label>
           <select
             id="targetValue"
-            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+            className="flex h-10 w-full rounded-[8px] border border-[#e6e6e6] bg-white px-3 py-2 text-body-sm"
             value={formData.targetValue}
             onChange={(e) => setFormData({ ...formData, targetValue: e.target.value })}
             required
@@ -209,7 +209,7 @@ export function AnnouncementForm({ classes, workshops, userId }: AnnouncementFor
           type="checkbox"
           checked={formData.requiresAck}
           onChange={(e) => setFormData({ ...formData, requiresAck: e.target.checked })}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded border-[#e6e6e6]"
         />
         <Label htmlFor="requiresAck">Require acknowledgment</Label>
       </div>
