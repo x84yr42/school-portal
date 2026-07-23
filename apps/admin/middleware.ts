@@ -4,10 +4,10 @@ function hasSessionCookie(req: NextRequest): boolean {
   const cookies = req.cookies.getAll();
   return cookies.some(
     (c) =>
+      c.name === "authjs.session-token" ||
+      c.name === "__Secure-authjs.session-token" ||
       c.name === "next-auth.session-token" ||
-      c.name === "__Secure-next-auth.session-token" ||
-      c.name.endsWith(".next-auth.session-token") ||
-      c.name.endsWith(".__Secure-next-auth.session-token")
+      c.name === "__Secure-next-auth.session-token"
   );
 }
 
