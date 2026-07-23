@@ -37,37 +37,57 @@ export default async function BillingPage() {
       </Card>
 
       <div className="space-y-3">
-        {invoices.map((invoice) => (
-          <Link key={invoice.id} href={`/billing/${invoice.id}`}>
-            <Card className="transition-colors hover:bg-gray-50">
-              <CardHeader className="p-4 pb-2">
-                <div className="flex items-start justify-between">
-                  <CardTitle className="text-base">{invoice.description}</CardTitle>
-                  <Badge
-                    variant={
-                      invoice.status === "PAID" ? "green" : invoice.status === "OVERDUE" ? "red" : "gray"
-                    }
-                  >
-                    {invoice.status}
-                  </Badge>
-                </div>
-                <p className="text-xs text-gray-500">
-                  {invoice.student.firstName} {invoice.student.lastName}
-                </p>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold">{formatCurrency(Number(invoice.totalAmount))}</span>
-                  <ChevronRight className="h-5 w-5 text-gray-400" />
-                </div>
-                <p className="text-xs text-gray-500">Due {formatDate(invoice.dueDate)}</p>
-                {isOverdue(invoice.dueDate) && invoice.status !== "PAID" && (
-                  <p className="mt-2 text-xs text-red-600">Overdue</p>
-                )}
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+        {invoices.map((invoice) => {
+          const hasPendingPayment = invoice.payments.some((p) => p.status === "PENDING");
+          const hasConfirmedPayment = invoice.payments.some((p) => p.status === "CONFIRMED");
+          return (
+            <Link key={invoice.id} href={`/billing/${invoice.id}`}>
+              <Card className="transition-colors hover:bg-gray-50">
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex items-start justify-between">
+                    <CardTitle className="text-base">{invoice.description}</CardTitle>
+                    <Badge
+                      variant={
+                        invoice.status === "PAID"
+                          ? "green"
+                          : invoice.status === "OVERDUE"
+                            ? "red"
+                            : "gray"
+                      }
+                    >
+                      {invoice.status === "PAID"
+                        ? "Paid"
+                        : invoice.status === "OVERDUE"
+                          ? "Overdue"
+                          : invoice.status === "PARTIALLY_PAID"
+                            ? "Partially Paid"
+                            : "Pending"}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {invoice.student.firstName} {invoice.student.lastName}
+                  </p>
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold">{formatCurrency(Number(invoice.totalAmount))}</span>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <p className="text-xs text-gray-500">Due {formatDate(invoice.dueDate)}</p>
+                  {isOverdue(invoice.dueDate) && invoice.status !== "PAID" && (
+                    <p className="mt-2 text-xs text-red-600">Overdue</p>
+                  )}
+                  {hasPendingPayment && !hasConfirmedPayment && (
+                    <p className="mt-2 text-xs text-yellow-600">Payment pending review</p>
+                  )}
+                  {hasConfirmedPayment && invoice.status !== "PAID" && (
+                    <p className="mt-2 text-xs text-green-600">Partial payment confirmed</p>
+                  )}
+                </CardContent>
+              </Card>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

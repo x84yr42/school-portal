@@ -1,10 +1,9 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle, Badge } from "@school-portal/ui";
-import { formatDate } from "@school-portal/shared";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
-import { CheckCircle } from "lucide-react";
+import { Archive } from "lucide-react";
 import Link from "next/link";
+import { AnnouncementsClient } from "./announcements-client";
 
 export const dynamic = "force-dynamic";
 
@@ -37,62 +36,54 @@ export default async function AnnouncementsPage() {
       author: true,
       reads: {
         where: { userId: session?.user?.id },
-        select: { acknowledgedAt: true },
+        select: { acknowledgedAt: true, archivedAt: true },
       },
     },
     orderBy: { publishedAt: "desc" },
   });
 
-  const visibleAnnouncements = announcements.filter((a) =>
-    isAnnouncementVisible(a.targetAudience, context)
-  );
+  // Filter out archived announcements and apply visibility
+  const visibleAnnouncements = announcements
+    .filter((a) => {
+      const read = a.reads[0];
+      return !read?.archivedAt;
+    })
+    .filter((a) => isAnnouncementVisible(a.targetAudience, context))
+    .map((a) => ({
+      id: a.id,
+      title: a.title,
+      body: a.body,
+      priority: a.priority,
+      createdAt: a.createdAt.toISOString(),
+      requiresAck: a.requiresAck,
+      author: { name: a.author.name },
+      hasAcknowledged: a.reads.length > 0 && a.reads[0]?.acknowledgedAt !== null,
+    }));
+
+  // Count archived
+  const archivedCount = announcements.filter((a) => {
+    const read = a.reads[0];
+    return read?.archivedAt !== null;
+  }).length;
 
   return (
     <div className="space-y-4 p-4 pb-24">
-      <h2 className="text-xl font-bold text-gray-900">Announcements</h2>
-
-      <div className="space-y-3">
-        {visibleAnnouncements.map((announcement) => {
-          const hasAcknowledged = announcement.reads.length > 0 && announcement.reads[0]?.acknowledgedAt !== null;
-          return (
-            <Link key={announcement.id} href={`/announcements/${announcement.id}`}>
-              <Card className="transition-colors hover:bg-gray-50">
-                <CardHeader className="p-4 pb-2">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <CardTitle className="text-base leading-tight">{announcement.title}</CardTitle>
-                      {hasAcknowledged && (
-                        <CheckCircle className="h-4 w-4 shrink-0 text-green-500" />
-                      )}
-                    </div>
-                    <Badge
-                      variant={announcement.priority === "EMERGENCY" ? "red" : "default"}
-                      className="shrink-0"
-                    >
-                      {announcement.priority}
-                    </Badge>
-                  </div>
-                  <p className="text-xs text-gray-500">
-                    {formatDate(announcement.createdAt)} · {announcement.author.name}
-                  </p>
-                </CardHeader>
-                <CardContent className="p-4 pt-0">
-                  <p className="line-clamp-2 text-sm text-gray-700">{announcement.body}</p>
-                  {announcement.requiresAck && (
-                    <span className={`mt-2 inline-block rounded-full px-2 py-0.5 text-xs ${
-                      hasAcknowledged
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}>
-                      {hasAcknowledged ? "Acknowledged" : "Requires acknowledgment"}
-                    </span>
-                  )}
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-900">Announcements</h2>
+        {archivedCount > 0 && (
+          <Link
+            href="/announcements/archived"
+            className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+          >
+            <Archive className="h-4 w-4" />
+            Archived ({archivedCount})
+          </Link>
+        )}
       </div>
+
+      <p className="text-xs text-gray-500">Swipe left on an announcement to archive it.</p>
+
+      <AnnouncementsClient announcements={visibleAnnouncements} />
 
       {visibleAnnouncements.length === 0 && (
         <div className="rounded-lg border border-gray-200 bg-white p-8 text-center">

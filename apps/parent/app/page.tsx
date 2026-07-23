@@ -34,7 +34,9 @@ export default async function HomePage() {
     ),
   };
 
-  const [allAnnouncements, activities, invoices, todaySlots, unreadCount] = await Promise.all([
+  const today = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1; // 0=Monday
+
+  const [allAnnouncements, activities, invoices, unreadCount] = await Promise.all([
     prisma.announcement.findMany({
       where: { isPublished: true },
       orderBy: { publishedAt: "desc" },
@@ -50,15 +52,40 @@ export default async function HomePage() {
       orderBy: { dueDate: "asc" },
       take: 3,
     }),
-    prisma.scheduleSlot.findMany({
-      where: { dayOfWeek: new Date().getDay() === 0 ? 6 : new Date().getDay() - 1 },
-      include: { subject: true, class: true },
-      orderBy: { startTime: "asc" },
-    }),
     prisma.notification.count({
       where: { userId: user?.id, isRead: false },
     }),
   ]);
+
+  // Get today's schedule for each child
+  const childrenWithSchedules = await Promise.all(
+    children.map(async (family) => {
+      const classId = family.student.enrollments[0]?.classId;
+      const workshopIds = family.student.workshopEnrollments.map((e) => e.workshopGroupId);
+
+      const [classSchedule, workshopSchedule] = await Promise.all([
+        classId
+          ? prisma.scheduleSlot.findMany({
+              where: { dayOfWeek: today, classId },
+              include: { subject: true },
+              orderBy: { startTime: "asc" },
+            })
+          : Promise.resolve([]),
+        workshopIds.length > 0
+          ? prisma.workshopGroup.findMany({
+              where: { id: { in: workshopIds }, scheduleDay: today },
+              select: { name: true, scheduleStartTime: true, scheduleEndTime: true },
+            })
+          : Promise.resolve([]),
+      ]);
+
+      return {
+        student: family.student,
+        classSchedule,
+        workshopSchedule,
+      };
+    })
+  );
 
   const announcements = allAnnouncements.filter((a) => isAnnouncementVisible(a.targetAudience, context)).slice(0, 3);
 
@@ -159,27 +186,56 @@ export default async function HomePage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="p-4 pb-2">
-          <CardTitle className="text-base">Today&apos;s Classes</CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 pt-0">
-          {todaySlots.length === 0 ? (
-            <p className="text-sm text-gray-500">No classes today.</p>
-          ) : (
-            <div className="space-y-2">
-              {todaySlots.map((slot) => (
-                <div key={slot.id} className="flex items-center justify-between rounded-md bg-gray-50 p-2 text-sm">
-                  <span className="font-medium text-gray-900">{slot.subject.name}</span>
-                  <span className="text-gray-600">
-                    {slot.startTime} - {slot.endTime}
-                  </span>
+      {childrenWithSchedules.map((child) => {
+        const hasSchedule = child.classSchedule.length > 0 || child.workshopSchedule.length > 0;
+        return (
+          <Card key={child.student.id}>
+            <CardHeader className="p-4 pb-2">
+              <CardTitle className="text-base">
+                {child.student.firstName}&apos;s Schedule Today
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 pt-0">
+              {!hasSchedule ? (
+                <p className="text-sm text-gray-500">No classes or workshops today.</p>
+              ) : (
+                <div className="space-y-3">
+                  {child.classSchedule.length > 0 && (
+                    <div>
+                      <p className="mb-1 text-xs font-medium text-gray-500 uppercase">Classes</p>
+                      <div className="space-y-1">
+                        {child.classSchedule.map((slot) => (
+                          <div key={slot.id} className="flex items-center justify-between rounded-md bg-gray-50 p-2 text-sm">
+                            <span className="font-medium text-gray-900">{slot.subject.name}</span>
+                            <span className="text-gray-600">
+                              {slot.startTime} - {slot.endTime}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {child.workshopSchedule.length > 0 && (
+                    <div>
+                      <p className="mb-1 text-xs font-medium text-gray-500 uppercase">Workshops</p>
+                      <div className="space-y-1">
+                        {child.workshopSchedule.map((ws, idx) => (
+                          <div key={idx} className="flex items-center justify-between rounded-md bg-blue-50 p-2 text-sm">
+                            <span className="font-medium text-gray-900">{ws.name}</span>
+                            <span className="text-gray-600">
+                              {ws.scheduleStartTime} - {ws.scheduleEndTime}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

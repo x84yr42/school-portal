@@ -106,6 +106,21 @@ export default async function InvoiceDetailPage({ params }: PageProps) {
                     <div>
                       <p className="font-medium">{payment.method.replace("_", " ")}</p>
                       <p className="text-xs text-gray-500">{formatDate(payment.recordedAt)}</p>
+                      <span
+                        className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs ${
+                          payment.status === "CONFIRMED"
+                            ? "bg-green-100 text-green-800"
+                            : payment.status === "REJECTED"
+                              ? "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {payment.status === "CONFIRMED"
+                          ? "Confirmed"
+                          : payment.status === "REJECTED"
+                            ? "Rejected"
+                            : "Pending Review"}
+                      </span>
                     </div>
                     <span className="font-medium">{formatCurrency(Number(payment.amount))}</span>
                   </div>

@@ -322,6 +322,7 @@ model AnnouncementRead {
   id             String    @id @default(cuid())
   readAt         DateTime  @default(now())
   acknowledgedAt DateTime?
+  archivedAt     DateTime?
 
   announcementId String
   announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
