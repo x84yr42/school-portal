@@ -1,4 +1,5 @@
 import { BottomNav } from "@/components/bottom-nav";
+import { AuthProvider } from "@/components/auth-provider";
 import "./globals.css";
 
 export default function RootLayout({
@@ -9,8 +10,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-gray-50 pb-20">
-        <main>{children}</main>
-        <BottomNav />
+        <AuthProvider>
+          <main>{children}</main>
+          <BottomNav />
+        </AuthProvider>
       </body>
     </html>
   );
