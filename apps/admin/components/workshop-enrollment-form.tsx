@@ -3,13 +3,19 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Input, Label } from "@school-portal/ui";
-import { Search, UserPlus, X } from "lucide-react";
+import { Search, UserPlus, X, Users } from "lucide-react";
 
 interface WorkshopEnrollmentFormProps {
   workshops: { id: string; name: string }[];
   allStudents: { id: string; firstName: string; lastName: string }[];
   enrolledStudentIds?: string[];
   workshopId?: string;
+}
+
+interface EnrolledStudent {
+  id: string;
+  firstName: string;
+  lastName: string;
 }
 
 export function WorkshopEnrollmentForm({
@@ -24,19 +30,41 @@ export function WorkshopEnrollmentForm({
   const [suggestions, setSuggestions] = useState<typeof allStudents>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedStudents, setSelectedStudents] = useState<typeof allStudents>([]);
+  const [enrolledStudents, setEnrolledStudents] = useState<EnrolledStudent[]>([]);
   const [loading, setLoading] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loadingEnrolled, setLoadingEnrolled] = useState(false);
+
+  // Fetch enrolled students when workshop is selected
+  useEffect(() => {
+    if (!selectedWorkshop) {
+      setEnrolledStudents([]);
+      return;
+    }
+    setLoadingEnrolled(true);
+    fetch(`/api/workshops/enroll?workshopGroupId=${selectedWorkshop}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setEnrolledStudents(data.map((e: { student: EnrolledStudent }) => e.student));
+        }
+      })
+      .catch(() => setEnrolledStudents([]))
+      .finally(() => setLoadingEnrolled(false));
+  }, [selectedWorkshop]);
+
+  const enrolledIds = enrolledStudents.map((s) => s.id);
 
   const filteredStudents = useCallback(() => {
     if (!search) return [];
     const q = search.toLowerCase();
     return allStudents.filter(
       (s) =>
-        !enrolledStudentIds.includes(s.id) &&
+        !enrolledIds.includes(s.id) &&
         !selectedStudents.some((ss) => ss.id === s.id) &&
         (s.firstName.toLowerCase().includes(q) || s.lastName.toLowerCase().includes(q))
     ).slice(0, 10);
-  }, [search, allStudents, enrolledStudentIds, selectedStudents]);
+  }, [search, allStudents, enrolledIds, selectedStudents]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -57,6 +85,20 @@ export function WorkshopEnrollmentForm({
     setSelectedStudents(selectedStudents.filter((s) => s.id !== id));
   }
 
+  async function removeEnrolledStudent(studentId: string) {
+    if (!selectedWorkshop || !confirm("Remove this student from the workshop?")) return;
+    const res = await fetch(
+      `/api/workshops/enroll?workshopGroupId=${selectedWorkshop}&studentId=${studentId}`,
+      { method: "DELETE" }
+    );
+    if (res.ok) {
+      setEnrolledStudents(enrolledStudents.filter((s) => s.id !== studentId));
+      router.refresh();
+    } else {
+      alert("Failed to remove student");
+    }
+  }
+
   async function handleEnroll() {
     if (!selectedWorkshop || selectedStudents.length === 0) return;
     setLoading(true);
@@ -71,6 +113,8 @@ export function WorkshopEnrollmentForm({
     });
 
     if (res.ok) {
+      // Move newly enrolled to the enrolled list
+      setEnrolledStudents([...enrolledStudents, ...selectedStudents]);
       setSelectedStudents([]);
       setShowConfirm(false);
       router.refresh();
@@ -102,9 +146,39 @@ export function WorkshopEnrollmentForm({
         </div>
       )}
 
+      {/* Currently enrolled students */}
+      {selectedWorkshop && (
+        <div className="space-y-2">
+          <Label className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Currently Enrolled ({enrolledStudents.length})
+          </Label>
+          {loadingEnrolled ? (
+            <p className="text-sm text-gray-500">Loading...</p>
+          ) : enrolledStudents.length > 0 ? (
+            <div className="max-h-40 overflow-y-auto rounded-md border border-gray-100">
+              {enrolledStudents.map((s) => (
+                <div key={s.id} className="flex items-center justify-between border-b border-gray-50 px-3 py-2 last:border-0">
+                  <span className="text-sm text-gray-700">{s.firstName} {s.lastName}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeEnrolledStudent(s.id)}
+                    className="text-xs text-red-500 hover:underline"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-500">No students enrolled yet.</p>
+          )}
+        </div>
+      )}
+
       {/* Student search with autocomplete */}
       <div className="space-y-2">
-        <Label>Search Students</Label>
+        <Label>Search Students to Add</Label>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <Input
@@ -132,7 +206,7 @@ export function WorkshopEnrollmentForm({
         </div>
       </div>
 
-      {/* Selected students */}
+      {/* Selected students to enroll */}
       {selectedStudents.length > 0 && (
         <div className="space-y-2">
           <Label>Students to Enroll ({selectedStudents.length})</Label>

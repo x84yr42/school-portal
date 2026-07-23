@@ -4,14 +4,17 @@ import { ActivitiesClient } from "@/components/activities-client";
 export const dynamic = "force-dynamic";
 
 export default async function ActivitiesPage() {
-  const activities = await prisma.activity.findMany({
-    include: {
-      responses: {
-        include: { student: true, parent: true },
+  const [activities, totalStudents] = await Promise.all([
+    prisma.activity.findMany({
+      include: {
+        responses: {
+          include: { student: true, parent: true },
+        },
       },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.student.count({ where: { isActive: true } }),
+  ]);
 
   // Serialize dates for client component
   const serialized = activities.map((a) => ({
@@ -28,5 +31,5 @@ export default async function ActivitiesPage() {
     })),
   }));
 
-  return <ActivitiesClient activities={serialized} />;
+  return <ActivitiesClient activities={serialized} totalStudents={totalStudents} />;
 }

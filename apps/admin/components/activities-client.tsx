@@ -33,7 +33,7 @@ function formatDate(date: string | Date) {
   return new Date(date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }
 
-export function ActivitiesClient({ activities: initialActivities }: { activities: Activity[] }) {
+export function ActivitiesClient({ activities: initialActivities, totalStudents }: { activities: Activity[]; totalStudents: number }) {
   const [activities, setActivities] = useState(initialActivities);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<Activity | null>(null);
@@ -93,7 +93,7 @@ export function ActivitiesClient({ activities: initialActivities }: { activities
                 <div className="mt-4 flex flex-wrap items-center gap-4 text-sm">
                   <div className="flex items-center gap-1 text-gray-500">
                     <BarChart3 className="h-4 w-4" />
-                    <span>{total} response(s)</span>
+                    <span>{total} response(s) ({totalStudents > 0 ? Math.round((total / totalStudents) * 100) : 0}%)</span>
                   </div>
                   <div className="flex items-center gap-1 text-green-600">
                     <CheckCircle className="h-4 w-4" />
