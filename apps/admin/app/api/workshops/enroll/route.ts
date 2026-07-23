@@ -4,17 +4,18 @@ import { prisma } from "@school-portal/database";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { workshopId, studentIds } = body as { workshopId: string; studentIds: string[] };
+    const workshopGroupId = body.workshopGroupId || body.workshopId;
+    const { studentIds } = body as { studentIds: string[] };
 
-    if (!workshopId || !studentIds?.length) {
-      return NextResponse.json({ error: "workshopId and studentIds are required" }, { status: 400 });
+    if (!workshopGroupId || !studentIds?.length) {
+      return NextResponse.json({ error: "workshopGroupId and studentIds are required" }, { status: 400 });
     }
 
     const enrollments = await Promise.all(
-      studentIds.map((studentId) =>
+      studentIds.map((studentId: string) =>
         prisma.studentWorkshopEnrollment.upsert({
-          where: { studentId_workshopGroupId: { studentId, workshopGroupId: workshopId } },
-          create: { studentId, workshopGroupId: workshopId },
+          where: { studentId_workshopGroupId: { studentId, workshopGroupId } },
+          create: { studentId, workshopGroupId },
           update: { isActive: true },
         })
       )

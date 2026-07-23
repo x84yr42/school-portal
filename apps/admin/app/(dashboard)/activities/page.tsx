@@ -1,61 +1,32 @@
 import { prisma } from "@school-portal/database";
-import { Card, CardContent, CardHeader, CardTitle, Button, Badge } from "@school-portal/ui";
-import { CalendarCheck } from "lucide-react";
-import { formatDate, formatCurrency } from "@school-portal/shared";
+import { ActivitiesClient } from "@/components/activities-client";
 
 export const dynamic = "force-dynamic";
 
 export default async function ActivitiesPage() {
   const activities = await prisma.activity.findMany({
-    include: { responses: true },
+    include: {
+      responses: {
+        include: { student: true, parent: true },
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-900">Activities & Consent</h2>
-        <Button>
-          <CalendarCheck className="mr-2 h-4 w-4" />
-          Create Activity
-        </Button>
-      </div>
+  // Serialize dates for client component
+  const serialized = activities.map((a) => ({
+    ...a,
+    date: a.date?.toISOString() ?? null,
+    deadline: a.deadline?.toISOString() ?? null,
+    createdAt: a.createdAt.toISOString(),
+    updatedAt: a.updatedAt.toISOString(),
+    images: (a.images as string[] | null) ?? null,
+    choices: (a.choices as { id: string; label: string }[] | null) ?? null,
+    responses: a.responses.map((r) => ({
+      ...r,
+      respondedAt: r.respondedAt.toISOString(),
+    })),
+  }));
 
-      <div className="grid gap-4">
-        {activities.map((activity) => (
-          <Card key={activity.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-lg">{activity.title}</CardTitle>
-                  <p className="mt-1 text-sm text-gray-500">
-                    {activity.date && formatDate(activity.date)} · {activity.location}
-                  </p>
-                </div>
-                <Badge
-                  variant={
-                    activity.status === "ACTIVE"
-                      ? "green"
-                      : activity.status === "DRAFT"
-                      ? "gray"
-                      : "default"
-                  }
-                >
-                  {activity.status}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <p className="line-clamp-2 text-gray-600">{activity.description}</p>
-              <div className="mt-4 flex items-center gap-4 text-sm text-gray-500">
-                <span>Responses: {activity.responses.length}</span>
-                {activity.cost && <span>Cost: {formatCurrency(Number(activity.cost))}</span>}
-                {activity.deadline && <span>Deadline: {formatDate(activity.deadline)}</span>}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
+  return <ActivitiesClient activities={serialized} />;
 }

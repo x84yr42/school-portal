@@ -14,6 +14,7 @@ import {
   LogOut,
   GraduationCap,
   Palette,
+  BookOpen,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@school-portal/ui";
@@ -21,6 +22,7 @@ import { cn } from "@school-portal/ui";
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/students", label: "Students", icon: Users },
+  { href: "/teachers", label: "Teachers", icon: BookOpen },
   { href: "/classes", label: "Classes", icon: GraduationCap },
   { href: "/workshops", label: "Workshops", icon: Palette },
   { href: "/announcements", label: "Announcements", icon: Megaphone },

@@ -111,6 +111,7 @@ model User {
   notifications    Notification[]
   paymentsRecorded Payment[]        @relation("PaymentRecorder")
   teacherClasses   Class[]          @relation("ClassTeacher")
+  teacherWorkshops WorkshopGroup[]  @relation("WorkshopTeacher")
   scheduleSlots    ScheduleSlot[]
   dailyNotes       DailyNote[]
   announcementReads AnnouncementRead[]
@@ -126,6 +127,7 @@ model Student {
   firstName    String
   lastName     String
   dateOfBirth  DateTime?
+  phone        String?
   photo        String?
   medicalNotes String?
   allergies    String?
@@ -216,13 +218,18 @@ model ClassEnrollment {
 }
 
 model WorkshopGroup {
-  id          String   @id @default(cuid())
-  name        String
-  description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(cuid())
+  name             String
+  description      String?
+  isActive         Boolean  @default(true)
+  scheduleDay      Int?     // 0=Monday ... 4=Friday
+  scheduleStartTime String? // "08:00"
+  scheduleEndTime  String?  // "09:00"
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
+  teacherId String?
+  teacher   User?   @relation("WorkshopTeacher", fields: [teacherId], references: [id])
   enrollments StudentWorkshopEnrollment[]
 
   @@map("workshop_groups")
