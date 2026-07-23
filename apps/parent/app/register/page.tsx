@@ -76,7 +76,11 @@ export default function RegisterPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white px-4 pb-24">
-      <div className="w-full max-w-sm rounded-[24px] border border-[#e6e6e6] bg-white p-8">
+      <div className="w-full max-w-sm">
+        <div className="rounded-[24px] border border-[#e6e6e6] bg-white overflow-hidden">
+          {/* Color block accent */}
+          <div className="h-2 bg-[#c5b0f4]" />
+          <div className="p-8">
         <div className="mb-8 text-center">
           <h1 className="text-display-lg text-black leading-none">Little Scholars</h1>
           <p className="text-body-sm mt-2">Parent Registration</p>
@@ -170,6 +174,8 @@ export default function RegisterPage() {
             Sign in
           </Link>
         </p>
+          </div>
+        </div>
       </div>
     </div>
   );

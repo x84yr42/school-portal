@@ -49,7 +49,7 @@ export default async function SchedulePage() {
                         <div className="text-caption">{slot.class.name}</div>
                       </div>
                       <div className="text-body-sm">
-                        {formatTime(slot.startTime)} – {formatTime(slot.endTime)}
+                        {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
                       </div>
                     </div>
                   ))

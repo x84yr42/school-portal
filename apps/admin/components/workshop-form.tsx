@@ -132,7 +132,7 @@ export function WorkshopForm({ teachers, workshop, onClose }: WorkshopFormProps)
               value={formData.scheduleDay}
               onChange={(e) => setFormData({ ...formData, scheduleDay: e.target.value })}
             >
-              <option value="">—</option>
+              <option value="">Select a day</option>
               {DAYS.map((d, i) => (
                 <option key={i} value={i}>{d}</option>
               ))}

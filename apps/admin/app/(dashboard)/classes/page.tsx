@@ -37,7 +37,7 @@ export default async function ClassesPage() {
                 <CardTitle>{cls.name}</CardTitle>
                 <Badge>Grade {cls.grade}</Badge>
               </div>
-              <p className="text-body-sm">Adviser: {cls.teacher?.name || "—"}</p>
+              <p className="text-body-sm">Adviser: {cls.teacher?.name || "N/A"}</p>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4 text-body-sm">

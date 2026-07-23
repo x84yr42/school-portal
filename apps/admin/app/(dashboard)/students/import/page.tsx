@@ -176,8 +176,8 @@ export default function StudentImportPage() {
                       <tr key={i}>
                         <td className="px-3 py-1">{row.firstName}</td>
                         <td className="px-3 py-1">{row.lastName}</td>
-                        <td className="px-3 py-1">{row.dateOfBirth || "—"}</td>
-                        <td className="px-3 py-1">{row.allergies || "—"}</td>
+                        <td className="px-3 py-1">{row.dateOfBirth || "N/A"}</td>
+                        <td className="px-3 py-1">{row.allergies || "None"}</td>
                       </tr>
                     ))}
                   </tbody>

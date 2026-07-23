@@ -51,10 +51,10 @@ export default async function SchedulePage() {
                   <div key={slot.id} className="rounded-[8px] bg-[#f7f7f5] p-3 text-body-sm">
                     <div className="font-[480]">{slot.subject.name}</div>
                     <div>
-                      {formatTime(slot.startTime)} – {formatTime(slot.endTime)}
+                      {formatTime(slot.startTime)} - {formatTime(slot.endTime)}
                     </div>
                     <div className="text-[13px]">
-                      {slot.class.name} · {slot.teacher?.name || "—"}
+                      {slot.class.name} / {slot.teacher?.name || "N/A"}
                     </div>
                   </div>
                 ))

@@ -108,7 +108,6 @@ export default async function DashboardPage() {
 
       {/* Activity Acknowledgements */}
       <div>
-        <Eyebrow className="mb-4 block">ACTIVITY RESPONSES</Eyebrow>
         <Card>
           <CardContent className="p-6">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -143,7 +142,6 @@ export default async function DashboardPage() {
 
       {/* Quick Actions */}
       <div>
-        <Eyebrow className="mb-4 block">QUICK ACTIONS</Eyebrow>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {quickActions.map((action) => {
             const Icon = action.icon;

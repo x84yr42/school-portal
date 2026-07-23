@@ -114,10 +114,10 @@ export default async function WorkshopDetailPage({ params }: { params: Promise<{
                         </Link>
                       </td>
                       <td className="px-4 py-3 text-gray-600">
-                        {e.student.enrollments[0]?.class?.name ?? "—"}
+                        {e.student.enrollments[0]?.class?.name ?? "N/A"}
                       </td>
                       <td className="px-4 py-3 text-gray-600">
-                        {e.student.families.map((f) => f.user.name).join(", ") || "—"}
+                        {e.student.families.map((f) => f.user.name).join(", ") || "N/A"}
                       </td>
                       <td className="px-4 py-3 text-gray-600">
                         {formatDate(e.startDate)}

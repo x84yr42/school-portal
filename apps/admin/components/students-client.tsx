@@ -247,12 +247,12 @@ export function StudentsClient({
                       </Link>
                     </td>
                     <td className="px-4 py-3 text-gray-600">
-                      {student.enrollments[0]?.class?.name ?? "—"}
+                      {student.enrollments[0]?.class?.name ?? "N/A"}
                     </td>
                     <td className="px-4 py-3 text-gray-600">
-                      {student.families.map((f) => f.user.name).join(", ") || "—"}
+                      {student.families.map((f) => f.user.name).join(", ") || "N/A"}
                     </td>
-                    <td className="px-4 py-3 text-gray-600">{student.allergies || "—"}</td>
+                    <td className="px-4 py-3 text-black">{student.allergies || "None"}</td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => handleEdit(student)}

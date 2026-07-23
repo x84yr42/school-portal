@@ -1,6 +1,6 @@
 import { prisma } from "@school-portal/database";
 import { auth } from "@/lib/auth";
-import { Card, CardContent, CardHeader, CardTitle, ColorBlock, Eyebrow } from "@school-portal/ui";
+import { Card, CardContent, CardHeader, CardTitle, ColorBlock } from "@school-portal/ui";
 import { Bell, ChevronRight } from "lucide-react";
 import { formatDate, daysUntil } from "@school-portal/shared";
 import { isAnnouncementVisible } from "@/lib/announcement-filter";
@@ -121,7 +121,7 @@ export default async function HomePage() {
       {/* Announcements preview */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <Eyebrow>ANNOUNCEMENTS</Eyebrow>
+          <h3 className="text-headline text-black">Announcements</h3>
           <Link href="/announcements" className="text-body-sm font-[480]">
             See all
           </Link>
@@ -149,7 +149,7 @@ export default async function HomePage() {
 
       {/* Pending Activities */}
       <div>
-        <Eyebrow className="mb-4 block">ACTIVITIES</Eyebrow>
+        <h3 className="text-headline text-black mb-4">Activities</h3>
         {activities.length === 0 ? (
           <p className="text-body-sm">No pending activities.</p>
         ) : (
@@ -199,7 +199,7 @@ export default async function HomePage() {
                           <div key={slot.id} className="flex items-center justify-between rounded-[8px] bg-[#f7f7f5] p-3 text-body-sm">
                             <span className="font-[480]">{slot.subject.name}</span>
                             <span className="text-body-sm">
-                              {slot.startTime} – {slot.endTime}
+                              {slot.startTime} - {slot.endTime}
                             </span>
                           </div>
                         ))}
@@ -214,7 +214,7 @@ export default async function HomePage() {
                           <div key={i} className="flex items-center justify-between rounded-[8px] bg-[#f7f7f5] p-3 text-body-sm">
                             <span className="font-[480]">{ws.name}</span>
                             <span className="text-body-sm">
-                              {ws.scheduleStartTime} – {ws.scheduleEndTime}
+                              {ws.scheduleStartTime} - {ws.scheduleEndTime}
                             </span>
                           </div>
                         ))}

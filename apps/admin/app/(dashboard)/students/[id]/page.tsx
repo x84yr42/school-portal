@@ -128,7 +128,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                   <p className="font-medium text-gray-900">{e.class.name}</p>
                   <p className="text-sm text-gray-500">
                     Enrolled: {formatDate(e.startDate)}
-                    {e.endDate && ` — End: ${formatDate(e.endDate)}`}
+                    {e.endDate && ` - End: ${formatDate(e.endDate)}`}
                   </p>
                 </div>
               ))}
@@ -152,7 +152,7 @@ export default async function StudentDetailPage({ params }: { params: Promise<{ 
                   <p className="font-medium text-gray-900">{e.workshopGroup.name}</p>
                   <p className="text-sm text-gray-500">
                     Enrolled: {formatDate(e.startDate)}
-                    {e.endDate && ` — End: ${formatDate(e.endDate)}`}
+                    {e.endDate && ` - End: ${formatDate(e.endDate)}`}
                   </p>
                 </div>
               ))}
