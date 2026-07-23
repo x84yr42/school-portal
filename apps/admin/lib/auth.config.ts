@@ -4,6 +4,7 @@ import { compare } from "bcryptjs";
 import { prisma } from "@school-portal/database";
 
 export const authConfig = {
+  trustHost: true,
   providers: [
     Credentials({
       name: "credentials",
