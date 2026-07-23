@@ -9,6 +9,16 @@ function hasSessionCookie(req: NextRequest): boolean {
 
 export default function middleware(req: NextRequest) {
   const { nextUrl } = req;
+
+  // Skip auth checks for API routes and static assets
+  if (
+    nextUrl.pathname.startsWith("/api") ||
+    nextUrl.pathname.startsWith("/_next") ||
+    nextUrl.pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
+
   const isAuthenticated = hasSessionCookie(req);
   const isLoginPage = nextUrl.pathname === "/login";
 
