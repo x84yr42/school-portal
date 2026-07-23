@@ -1,0 +1,482 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── ENUMS ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  PARENT
+}
+
+enum AnnouncementCategory {
+  GENERAL
+  EVENT
+  EMERGENCY
+  ACTIVITY
+  ACADEMIC
+}
+
+enum AnnouncementPriority {
+  NORMAL
+  URGENT
+  EMERGENCY
+}
+
+enum ParticipationType {
+  REQUIRED
+  OPTIONAL
+}
+
+enum ActivityStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+  CANCELLED
+}
+
+enum ActivityResponseStatus {
+  APPROVED
+  DECLINED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_DEPOSIT
+  ONLINE
+  OTHER
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+enum NotificationType {
+  ANNOUNCEMENT
+  ACTIVITY
+  INVOICE
+  PAYMENT
+  SCHEDULE
+  PICKUP
+  EMERGENCY
+  SYSTEM
+}
+
+enum CalendarEventType {
+  HOLIDAY
+  HALF_DAY
+  EARLY_DISMISSAL
+  EVENT
+  EXAM
+  BREAK
+}
+
+// ─── USERS & AUTH ────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String?
+  name          String
+  phone         String?
+  avatar        String?
+  role          UserRole  @default(PARENT)
+  fcmToken      String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  families         Family[]
+  announcements    Announcement[]
+  activityResponses ActivityResponse[]
+  notifications    Notification[]
+  paymentsRecorded Payment[]        @relation("PaymentRecorder")
+  teacherClasses   Class[]          @relation("ClassTeacher")
+  scheduleSlots    ScheduleSlot[]
+  dailyNotes       DailyNote[]
+  announcementReads AnnouncementRead[]
+  usedLinkCodes    StudentLinkCode[]
+
+  @@map("users")
+}
+
+// ─── STUDENTS & FAMILIES ─────────────────────────────────────────────────────
+
+model Student {
+  id           String    @id @default(cuid())
+  firstName    String
+  lastName     String
+  dateOfBirth  DateTime?
+  photo        String?
+  medicalNotes String?
+  allergies    String?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relations
+  families          Family[]
+  enrollments       ClassEnrollment[]
+  workshopEnrollments StudentWorkshopEnrollment[]
+  activityResponses ActivityResponse[]
+  invoices        Invoice[]
+  pickupContacts  PickupContact[]
+  linkCodes       StudentLinkCode[]
+
+  @@map("students")
+}
+
+model Family {
+  id           String   @id @default(cuid())
+  relationship String   // e.g., "Mother", "Father", "Guardian"
+  isPrimary    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  // Relations
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, studentId])
+  @@map("families")
+}
+
+model StudentLinkCode {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  isUsed      Boolean   @default(false)
+  usedByUserId String?
+  usedAt      DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  usedBy    User?   @relation(fields: [usedByUserId], references: [id])
+
+  @@map("student_link_codes")
+}
+
+// ─── CLASSES & SCHEDULES ─────────────────────────────────────────────────────
+
+model Class {
+  id        String  @id @default(cuid())
+  name      String  // e.g., "Grade 1 - Section A"
+  grade     Int
+  section   String?
+  isActive  Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  teacherId     String?
+  teacher       User?             @relation("ClassTeacher", fields: [teacherId], references: [id])
+  enrollments   ClassEnrollment[]
+  scheduleSlots ScheduleSlot[]
+  dailyNotes    DailyNote[]
+  pickupConfig  PickupConfig?
+  calendarEvents SchoolCalendar[]
+
+  @@map("classes")
+}
+
+model ClassEnrollment {
+  id        String   @id @default(cuid())
+  startDate DateTime @default(now())
+  endDate   DateTime?
+  isActive  Boolean  @default(true)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  classId   String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, classId])
+  @@map("class_enrollments")
+}
+
+model WorkshopGroup {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  enrollments StudentWorkshopEnrollment[]
+
+  @@map("workshop_groups")
+}
+
+model StudentWorkshopEnrollment {
+  id        String   @id @default(cuid())
+  startDate DateTime @default(now())
+  endDate   DateTime?
+  isActive  Boolean  @default(true)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  workshopGroupId String
+  workshopGroup   WorkshopGroup @relation(fields: [workshopGroupId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, workshopGroupId])
+  @@map("student_workshop_enrollments")
+}
+
+model Subject {
+  id    String @id @default(cuid())
+  name  String
+  code  String @unique
+  color String? // hex color for UI
+
+  scheduleSlots ScheduleSlot[]
+
+  @@map("subjects")
+}
+
+model ScheduleSlot {
+  id        String @id @default(cuid())
+  dayOfWeek Int    // 0=Monday, 1=Tuesday, ..., 4=Friday
+  startTime String // "08:00"
+  endTime   String // "09:00"
+
+  classId   String
+  class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId String
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  teacherId String?
+  teacher   User?   @relation(fields: [teacherId], references: [id])
+
+  @@map("schedule_slots")
+}
+
+model DailyNote {
+  id           String   @id @default(cuid())
+  date         DateTime
+  itemsToBring Json     // e.g. ["Art supplies", "PE uniform"]
+  homework     String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  classId String
+  class   Class @relation(fields: [classId], references: [id], onDelete: Cascade)
+  teacherId String?
+  teacher   User? @relation(fields: [teacherId], references: [id])
+
+  @@unique([classId, date])
+  @@map("daily_notes")
+}
+
+// ─── ANNOUNCEMENTS ───────────────────────────────────────────────────────────
+
+model Announcement {
+  id             String               @id @default(cuid())
+  title          String
+  body           String               // Rich text (HTML or Markdown)
+  category       AnnouncementCategory @default(GENERAL)
+  priority       AnnouncementPriority @default(NORMAL)
+  images         Json?            // URLs to uploaded images
+  targetAudience String?              // JSON: {type: "all"|"grade"|"class"|"workshop", value: ...}
+  requiresAck    Boolean              @default(false)
+  publishedAt    DateTime?
+  isPublished    Boolean              @default(false)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  createdBy String
+  author    User   @relation(fields: [createdBy], references: [id])
+  reads     AnnouncementRead[]
+
+  @@map("announcements")
+}
+
+model AnnouncementRead {
+  id             String    @id @default(cuid())
+  readAt         DateTime  @default(now())
+  acknowledgedAt DateTime?
+
+  announcementId String
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([announcementId, userId])
+  @@map("announcement_reads")
+}
+
+// ─── ACTIVITIES & CONSENT ────────────────────────────────────────────────────
+
+model Activity {
+  id               String            @id @default(cuid())
+  title            String
+  description      String
+  date             DateTime?
+  location         String?
+  images           Json?             // event/venue images
+  participationType ParticipationType @default(OPTIONAL)
+  consentRequired  Boolean           @default(true)
+  choices          Json?             // [{id, label, image?}] e.g., shirt designs
+  cost             Float?
+  capacity         Int?
+  deadline         DateTime?
+  status           ActivityStatus    @default(DRAFT)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  responses ActivityResponse[]
+
+  @@map("activities")
+}
+
+model ActivityResponse {
+  id             String               @id @default(cuid())
+  status         ActivityResponseStatus
+  selectedChoice String?              // choice ID from Activity.choices
+  respondedAt    DateTime             @default(now())
+
+  activityId String
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  studentId  String
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  parentId   String
+  parent     User     @relation(fields: [parentId], references: [id])
+
+  @@unique([activityId, studentId])
+  @@map("activity_responses")
+}
+
+// ─── BILLING & PAYMENTS ──────────────────────────────────────────────────────
+
+model Invoice {
+  id          String        @id @default(cuid())
+  number      String        @unique // e.g., "INV-2026-001"
+  description String
+  lineItems   Json          // [{description, amount}]
+  totalAmount Float
+  amountPaid  Float       @default(0)
+  status      InvoiceStatus @default(DRAFT)
+  dueDate     DateTime
+  issuedAt    DateTime      @default(now())
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id])
+  payments  Payment[]
+
+  @@map("invoices")
+}
+
+model Payment {
+  id         String        @id @default(cuid())
+  amount     Float
+  method     PaymentMethod
+  proofImage String?       // URL to uploaded bank transfer screenshot
+  status     PaymentStatus @default(PENDING)
+  notes      String?
+  recordedAt DateTime      @default(now())
+
+  invoiceId  String
+  invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  recordedBy String?
+  recorder   User?   @relation("PaymentRecorder", fields: [recordedBy], references: [id])
+
+  @@map("payments")
+}
+
+// ─── NOTIFICATIONS ───────────────────────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  title     String
+  body      String
+  data      Json?            // Additional payload (links, IDs, etc.)
+  channels  Json            // ["push", "email", "sms"]
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  sentAt    DateTime         @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ─── SCHOOL CALENDAR ─────────────────────────────────────────────────────────
+
+model SchoolCalendar {
+  id          String            @id @default(cuid())
+  date        DateTime
+  type        CalendarEventType
+  title       String
+  description String?
+  createdAt   DateTime          @default(now())
+
+  classes Class[]
+
+  @@map("school_calendar")
+}
+
+// ─── PICKUP SYSTEM ───────────────────────────────────────────────────────────
+
+model PickupConfig {
+  id                    String @id @default(cuid())
+  defaultDismissalTime  String // "15:00"
+  reminderMinutesBefore Int    @default(30)
+
+  classId String @unique
+  class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+  @@map("pickup_configs")
+}
+
+model PickupContact {
+  id           String  @id @default(cuid())
+  name         String
+  phone        String
+  relationship String
+  isAuthorized Boolean @default(true)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("pickup_contacts")
+}
+
+// ─── SCHOOL SETTINGS ─────────────────────────────────────────────────────────
+
+model SchoolSettings {
+  id              String  @id @default("default")
+  schoolName      String  @default("Little Scholars Academy")
+  logo            String?
+  address         String?
+  phone           String?
+  email           String?
+  academicYear    String? // e.g., "2026-2027"
+  currency        String  @default("PHP")
+  timezone        String  @default("Asia/Manila")
+
+  @@map("school_settings")
+}
